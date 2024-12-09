@@ -377,10 +377,12 @@ $(document).ready(function() {
 
 
 
-    $(window).on("load", function () {
-        $(".preloader").fadeOut("slow", function () {
-            $(this).remove();  // Removes the preloader after fading out
-        });
+  $(window).on("load", function () {
+        setTimeout(function () {
+            $(".preloader").fadeOut("slow", function () {
+                $(this).remove(); // Ensures the preloader is removed
+            });
+        }, 3000); // Fallback timeout in milliseconds
     });
     
     });

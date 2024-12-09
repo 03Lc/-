@@ -101,6 +101,43 @@ $(document).ready(function() {
 
 
 
+$(document).ready(function () {
+    // Ensure the preloader hides after a maximum wait time
+    const PRELOADER_TIMEOUT = 3000; // Adjust as needed (in milliseconds)
+
+    // Hide preloader after assets load
+    $(window).on("load", function () {
+        $(".preloader").fadeOut("slow", function () {
+            $(this).remove(); // Removes the preloader from the DOM
+        });
+    });
+
+    // Fallback to hide preloader if load takes too long
+    setTimeout(function () {
+        if ($(".preloader").is(":visible")) {
+            $(".preloader").fadeOut("slow", function () {
+                $(this).remove();
+            });
+        }
+    }, PRELOADER_TIMEOUT);
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
 
     const TWO_PI = Math.PI * 2;
     const HALF_PI = Math.PI * 0.5;
@@ -385,12 +422,6 @@ $(document).ready(function() {
 
     
 
-  $(window).on("load", function () {
-        setTimeout(function () {
-            $(".preloader").fadeOut("slow", function () {
-                $(this).remove(); // Ensures the preloader is removed
-            });
-        }, 3000); // Fallback timeout in milliseconds
-    });
+  
     
     });

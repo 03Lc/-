@@ -375,7 +375,15 @@ $(document).ready(function() {
     }
 
 
+    $("img").on("error", function () {
+    $(this).attr("src", "fallback-image.jpg"); // Replace with a fallback image
+});
 
+
+
+
+
+    
 
   $(window).on("load", function () {
         setTimeout(function () {

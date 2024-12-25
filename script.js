@@ -358,5 +358,5 @@ $(document).ready(function() {
         $(".preloader").fadeOut("slow", function() {
             $(this).remove();
         });
-    }, 4000); // 4 seconds fallback
+    }, 3000); // 2 seconds fallback
 });

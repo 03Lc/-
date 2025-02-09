@@ -59,6 +59,67 @@ html{
 
 
 
+/* Style for login button */
+.login-btn {
+    background: linear-gradient(45deg, #ff5e00, #ff7700, #ff4500, #ff0000);
+    color: #fff;
+    font-size: 10px; /* Small font size */
+    font-weight: bold;
+    padding: 5px 10px; /* Compact padding */
+    border-radius: 15px; /* Smaller curve */
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6); /* Increased shadow effect */
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.login-btn:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%; /* Increased the size of the flame effect */
+    height: 250%; /* Increased the size of the flame effect */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(255, 0, 0, 0.7)); /* Stronger flame effect */
+    animation: flame-animation 1.2s infinite; /* Faster animation for more intensity */
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.login-btn:hover {
+    background: linear-gradient(45deg, #ff0000, #ff5e00, #ff7700);
+    color: #fff;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 50px rgba(255, 0, 0, 0.6); /* Stronger shadow on hover */
+}
+
+.login-btn span {
+    position: relative;
+    z-index: 2;
+}
+
+/* Enhanced flame animation for more dramatic effect */
+@keyframes flame-animation {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.4);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+}
+
+
+
+
+
 
 
 

@@ -57,8 +57,6 @@ html{
 
 
 
-
-
 /* Style for login button */
 .login-btn {
     background: linear-gradient(45deg, #ff5e00, #ff7700, #ff4500, #ff0000);
@@ -421,6 +419,8 @@ section .title::after{
     margin: 10px 0 7px 0;
 }
 
+
+
 /* skills section styling */
 
 .skills .title::after{
@@ -449,9 +449,12 @@ section .title::after{
     border: 2px solid crimson;
     transition: all 0.3s ease;
 }
-
+.skills .skills-content .left a:hover{
+    color: crimson;
+    background: none;
+}
 .skills .skills-content .right .bars{
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 .skills .skills-content .right .info{
     display: flex;
@@ -466,7 +469,7 @@ section .title::after{
 .skills .skills-content .right .line{
     height: 5px;
     width: 100%;
-    background: rgb(209, 221, 200);
+    background: lightgrey;
     position: relative;
 }
 .skills .skills-content .right .line::before{
@@ -475,7 +478,7 @@ section .title::after{
     height: 100%;
     left: 0;
     top: 0;
-    background: #1417dc;
+    background: crimson;
 }
 .skills-content .right .html::before{
     width: 18%;
@@ -486,12 +489,19 @@ section .title::after{
 .skills-content .right .js::before{
     width: 6%;
 }
-.skills-content .right .c::before{
+.skills-content .right .php::before{
     width: 2%;
 }
 .skills-content .right .mysql::before{
     width: 5%;
 }
+
+
+
+
+
+
+
 
 /* teams section styling */
 .teams .title::after{

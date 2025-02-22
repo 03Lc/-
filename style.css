@@ -11,6 +11,14 @@ html{
     scroll-behavior: smooth;
 }
 
+
+
+
+body {
+    user-select: none;
+}
+
+
 /* Preloader Styles */
 .preloader {
     position: fixed;

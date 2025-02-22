@@ -11,6 +11,16 @@ $(document).ready(function() {
         }
     });
 
+document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+    
+
+
+
+
+
+    
     // Slide-up script
     $('.scroll-up-btn').click(function() {
         $('html').animate({ scrollTop: 0 });

@@ -610,7 +610,7 @@ section .title::after{
     flex-wrap: wrap; /* Allow content to wrap on smaller screens */
 }
 
-form {
+.contact form {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     padding: 30px;

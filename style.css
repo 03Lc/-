@@ -12,11 +12,10 @@ html{
 }
 
 
-
-
 body {
     user-select: none;
 }
+
 
 
 /* Preloader Styles */
@@ -580,6 +579,8 @@ section .title::after{
 
 
 
+
+
 /* contact section styling */
 .contact {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -674,7 +675,7 @@ form .error {
     width: 100%;
     max-width: 500px;
     height: auto;
-    display: flex;
+    display: none; /* Default: Hide the GIF container */
     justify-content: center;
     align-items: center;
     margin-top: 20px; /* Ensure some margin for spacing */
@@ -688,13 +689,15 @@ form .error {
     object-fit: cover;
 }
 
+/* Media query for larger screens (laptops and desktops) */
+@media (min-width: 768px) {
+    .contact .gif-container {
+        display: flex; /* Show GIF container on larger screens */
+    }
+}
+
 /* Media query for smaller screens */
 @media (max-width: 768px) {
-    /* Hide the GIF container on small screens */
-    .gif-container {
-        display: none !important; /* Ensure the GIF is hidden */
-    }
-
     .contact-content {
         flex-direction: column;
         align-items: center;
@@ -707,6 +710,8 @@ form .error {
     }
 }
 
+  
+   
 
 
 

@@ -338,138 +338,15 @@
 
 
 
+              <iframe src="https://03lc.github.io/lc-chatbot/" 
+              style="position: fixed; bottom: 60px; right: 10px; width: 180vw; max-width: 450px; height: 50vh; max-height: 500px; border: none; z-index: 1000;"></iframe>
+          
 
 
 
 
 
 
-
-<!-- Chatbot Floating Button -->
-<div id="chatbot-container">
-    <button id="chatbot-btn">
-        <div id="chat-status-dot"></div>
-        <img src="preoader.gif" alt="LC" id="chatbot-logo">
-    </button>
-    <div id="chat-label">Chat with LC</div>
-</div>
-
-<!-- Chatbot -->
-<div id="chatbot" style="display:none;">
-    <button id="close-chatbot-btn">X</button>
-    <!-- Chatbot Content goes here -->
-</div>
-
-
-<!-- Chatbot Widget -->
-<iframe id="lc-chatbot" src="https://undermaintenance1.my.canva.site/" 
-        style="position: fixed; bottom: 80px; right: 20px; width: 350px; height: 500px; 
-        border: none; box-shadow: 0px 0px 10px rgba(0,0,0,0.3); border-radius: 10px; display: none;">
-</iframe>
-
-<!-- Chatbot Script -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var chatbot = document.getElementById("lc-chatbot");
-        var button = document.getElementById("chatbot-btn");
-        var label = document.getElementById("chat-label");
-
-        function showChatLabel() {
-            label.style.opacity = "1";
-            setTimeout(() => { label.style.opacity = "0"; }, 2000);
-        }
-
-        // Show the label every 5 seconds
-        setInterval(showChatLabel, 5000);
-
-        button.addEventListener("click", function () {
-            if (chatbot.style.display === "none") {
-                chatbot.style.display = "block";
-                button.classList.add("active");
-            } else {
-                chatbot.style.display = "none";
-                button.classList.remove("active");
-            }
-        });
-    });
-</script>
-
-<!-- Chatbot Styles -->
-<style>
-    /* Chatbot container positioning */
-    #chatbot-container {
-        position: fixed;
-        bottom: 80px; /* Above scroll-to-top button */
-        right: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    /* Chatbot button */
-    #chatbot-btn {
-        width: 60px;
-        height: 60px;
-        background: rgb(64, 64, 59);
-        border: 2px solid #12ce9c;
-        border-radius: 50%;
-        box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        transition: all 0.3s ease-in-out;
-    }
-
-    #chatbot-btn img {
-        width: 40px;
-        height: 40px;
-    }
-
-    #chatbot-btn:hover {
-        transform: scale(1.1);
-        background: #007bff;
-    }
-
-    /* Online status dot */
-    #chat-status-dot {
-        width: 12px;
-        height: 12px;
-        background: #00ff00;
-        border-radius: 50%;
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        box-shadow: 0px 0px 8px rgba(0, 255, 0, 0.8);
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.2); opacity: 0.6; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Chat label animation */
-    #chat-label {
-        background: #007bff;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 10px;
-        font-size: 14px;
-        position: absolute;
-        bottom: 70px;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-    }
-
-    /* Chatbot toggle animation */
-    #chatbot-btn.active {
-        background: red;
-    }
-</style>
 
 
 </body>

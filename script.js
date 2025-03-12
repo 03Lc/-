@@ -369,4 +369,36 @@ document.addEventListener('contextmenu', function(e) {
             $(this).remove();
         });
     }, 1700); // 2 seconds fallback
+
+
+
+   // Function to toggle dark mode and store preference in localStorage
+const toggleDarkMode = () => {
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    // Toggle dark mode class on the body element
+    document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+  
+    // Store the dark mode preference in localStorage
+    localStorage.setItem('darkMode', darkModeToggle.checked ? 'enabled' : 'disabled');
+  };
+  
+  // Check for saved user preference in localStorage
+  window.addEventListener('load', () => {
+    const darkModeSetting = localStorage.getItem('darkMode');
+    
+    // Set the checkbox based on the saved theme
+    if (darkModeSetting === 'enabled') {
+      document.getElementById('dark-mode-toggle').checked = true;
+      document.body.classList.add('dark-mode');
+    } else {
+      document.getElementById('dark-mode-toggle').checked = false;
+      document.body.classList.remove('dark-mode');
+    }
+  });
+  
+  // Add event listener to handle checkbox changes
+  document.getElementById('dark-mode-toggle').addEventListener('change', toggleDarkMode);
+  
+
+  
 });

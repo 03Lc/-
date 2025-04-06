@@ -11,68 +11,55 @@ $(document).ready(function() {
         }
     });
 
-document.addEventListener('contextmenu', function(e) {
+
+
+    document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
     
 
 
-
-
-
-    
-    // Slide-up script
-    $('.scroll-up-btn').click(function() {
-        $('html').animate({ scrollTop: 0 });
-        // Removing smooth scroll on slide-up button click
-        $('html').css("scrollBehavior", "auto");
-    });
-
-    // Smooth scroll for menu items click
-    $('.navbar .menu li a').click(function() {
-        $('html').css("scrollBehavior", "smooth");
-    });
-
-    // Toggle menu/navbar script
-    $('.menu-btn').click(function() {
-        $('.navbar .menu').toggleClass("active");
-        $('.menu-btn i').toggleClass("active");
-    });
-
-    // Typing text animation script
     var typed = new Typed(".typing", {
-        strings: ["Student", "Designer", "Freelancer"],
+        strings: ["Student","Freelancer"],
         typeSpeed: 100,
         backSpeed: 60,
         loop: true
+      });
+      
+
+
+
+   // Creepy Pop-up Warning Logic
+$(document).ready(function () {
+    const popup = $('#popup-warning');
+    const closeBtn = $('.close-btn');
+    const okBtn = $('#popup-ok-btn');
+  
+    // Show the pop-up 4 seconds after page loads
+    setTimeout(() => {
+      popup.fadeIn(500); // smooth fade-in
+    }, 4000); // 4 seconds
+  
+    // Close the popup on OK or X click
+    closeBtn.on('click', () => popup.fadeOut(300));
+    okBtn.on('click', () => popup.fadeOut(300));
+  
+    // Close when clicking outside the popup content
+    $(window).on('click', function (e) {
+      if ($(e.target).is(popup)) {
+        popup.fadeOut(300);
+      }
     });
-
-    var typed = new Typed(".typing-2", {
-        strings: ["Student", "Designer", "Freelancer"],
-        typeSpeed: 100,
-        backSpeed: 60,
-        loop: true
-    });
-
-    // Pop-up warning functionality
-    var popup = $('#popup-warning');
-    var closeBtn = $('.close-btn');
-    var okBtn = $('#popup-ok-btn');
-
-    // Show the pop-up warning after a delay (7 seconds)
-    setTimeout(function() {
-        popup.show();
-    }, 7000);
-
-    // Close the pop-up when the close button or OK button is clicked
-    closeBtn.click(function() {
-        popup.hide();
-    });
-
-    okBtn.click(function() {
-        popup.hide();
-    });
-
+    // Typewriter creepy text after popup appears
+setTimeout(() => {
+    creepyTypewriter(
+      "☠️ This site is just for fun. Expect bugs. Expect chaos. Proceed if you dare.",
+      ".popup-typewriter"
+    );
+  }, 4100); // Just after the popup appears
+  
+  });
+  
     // Close the pop-up when clicking outside of the pop-up content
     $(window).click(function(event) {
         if ($(event.target).is(popup)) {
@@ -80,7 +67,7 @@ document.addEventListener('contextmenu', function(e) {
         }
     });
 
-    // Owl carousel script
+    // Owl carousel script for my team 
     $('.carousel').owlCarousel({
         margin: 20,
         loop: true,
@@ -103,252 +90,37 @@ document.addEventListener('contextmenu', function(e) {
         }
     });
 
-    // Canvas drawing setup
-    const TWO_PI = Math.PI * 2;
-    const HALF_PI = Math.PI * 0.5;
+   
 
-    var viewWidth = 512,
-        viewHeight = 350,
-        drawingCanvas = document.getElementById("drawing_canvas"),
-        ctx,
-        timeStep = (1 / 60);
 
-    // Point and Particle classes
-    Point = function(x, y) {
-        this.x = x || 0;
-        this.y = y || 0;
-    };
 
-    Particle = function(p0, p1, p2, p3) {
-        this.p0 = p0;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-        this.time = 0;
-        this.duration = 3 + Math.random() * 2;
-        this.color = '#' + Math.floor((Math.random() * 0xffffff)).toString(16);
-        this.w = 8;
-        this.h = 6;
-        this.complete = false;
-    };
+    document.querySelector('.contact-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.querySelector('input[type="text"]').value;
+      const email = document.querySelector('input[type="email"]').value;
+      const subject = document.querySelector('select').value;
+      const message = document.querySelector('textarea').value;
 
-    Particle.prototype = {
-        update: function() {
-            this.time = Math.min(this.duration, this.time + timeStep);
-            var f = Ease.outCubic(this.time, 0, 1, this.duration);
-            var p = cubeBezier(this.p0, this.p1, this.p2, this.p3, f);
+      if(name && email && subject && message) {
+        alert(`Message Sent!\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`);
+      } else {
+        alert('Please fill in all fields.');
+      }
+    });
+  
 
-            var dx = p.x - this.x;
-            var dy = p.y - this.y;
 
-            this.r = Math.atan2(dy, dx) + HALF_PI;
-            this.sy = Math.sin(Math.PI * f * 10);
-            this.x = p.x;
-            this.y = p.y;
 
-            this.complete = this.time === this.duration;
-        },
-        draw: function() {
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.r);
-            ctx.scale(1, this.sy);
-            ctx.fillStyle = this.color;
-            ctx.fillRect(-this.w * 0.5, -this.h * 0.5, this.w, this.h);
-            ctx.restore();
-        }
-    };
 
-    // Loader class
-    Loader = function(x, y) {
-        this.x = x;
-        this.y = y;
-        this.r = 24;
-        this._progress = 0;
-        this.complete = false;
-    };
 
-    Loader.prototype = {
-        reset: function() {
-            this._progress = 0;
-            this.complete = false;
-        },
-        set progress(p) {
-            this._progress = p < 0 ? 0 : (p > 1 ? 1 : p);
-            this.complete = this._progress === 1;
-        },
-        get progress() {
-            return this._progress;
-        },
-        draw: function() {
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, -HALF_PI, TWO_PI * this._progress - HALF_PI);
-            ctx.lineTo(this.x, this.y);
-            ctx.closePath();
-            ctx.fill();
-        }
-    };
 
-    // Exploader class
-    Exploader = function(x, y) {
-        this.x = x;
-        this.y = y;
-        this.startRadius = 24;
-        this.time = 0;
-        this.duration = 0.4;
-        this.progress = 0;
-        this.complete = false;
-    };
 
-    Exploader.prototype = {
-        reset: function() {
-            this.time = 0;
-            this.progress = 0;
-            this.complete = false;
-        },
-        update: function() {
-            this.time = Math.min(this.duration, this.time + timeStep);
-            this.progress = Ease.inBack(this.time, 0, 1, this.duration);
-            this.complete = this.time === this.duration;
-        },
-        draw: function() {
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.startRadius * (1 - this.progress), 0, TWO_PI);
-            ctx.fill();
-        }
-    };
 
-    var particles = [],
-        loader,
-        exploader,
-        phase = 0;
 
-    // Canvas initialization and animation loop
-    function initDrawingCanvas() {
-        drawingCanvas.width = viewWidth;
-        drawingCanvas.height = viewHeight;
-        ctx = drawingCanvas.getContext('2d');
-        createLoader();
-        createExploader();
-        createParticles();
-    }
 
-    function createLoader() {
-        loader = new Loader(viewWidth * 0.5, viewHeight * 0.5);
-    }
 
-    function createExploader() {
-        exploader = new Exploader(viewWidth * 0.5, viewHeight * 0.5);
-    }
 
-    function createParticles() {
-        for (var i = 0; i < 128; i++) {
-            var p0 = new Point(viewWidth * 0.5, viewHeight * 0.5);
-            var p1 = new Point(Math.random() * viewWidth, Math.random() * viewHeight);
-            var p2 = new Point(Math.random() * viewWidth, Math.random() * viewHeight);
-            var p3 = new Point(Math.random() * viewWidth, viewHeight + 64);
-            particles.push(new Particle(p0, p1, p2, p3));
-        }
-    }
 
-    function update() {
-        switch (phase) {
-            case 0:
-                loader.progress += (1 / 45);
-                break;
-            case 1:
-                exploader.update();
-                break;
-            case 2:
-                particles.forEach(function(p) {
-                    p.update();
-                });
-                break;
-        }
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, viewWidth, viewHeight);
-        switch (phase) {
-            case 0:
-                loader.draw();
-                break;
-            case 1:
-                exploader.draw();
-                break;
-            case 2:
-                particles.forEach(function(p) {
-                    p.draw();
-                });
-                break;
-        }
-    }
-
-    window.onload = function() {
-        initDrawingCanvas();
-        requestAnimationFrame(loop);
-    };
-
-    function loop() {
-        update();
-        draw();
-
-        if (phase === 0 && loader.complete) {
-            phase = 1;
-        } else if (phase === 1 && exploader.complete) {
-            phase = 2;
-        } else if (phase === 2 && checkParticlesComplete()) {
-            // Reset
-            phase = 0;
-            loader.reset();
-            exploader.reset();
-            particles.length = 0;
-            createParticles();
-        }
-
-        requestAnimationFrame(loop);
-    }
-
-    function checkParticlesComplete() {
-        for (var i = 0; i < particles.length; i++) {
-            if (!particles[i].complete) return false;
-        }
-        return true;
-    }
-
-    // Easing functions
-    var Ease = {
-        inCubic: function(t, b, c, d) {
-            t /= d;
-            return c * t * t * t + b;
-        },
-        outCubic: function(t, b, c, d) {
-            t /= d;
-            t--;
-            return c * (t * t * t + 1) + b;
-        },
-        inOutCubic: function(t, b, c, d) {
-            t /= d / 2;
-            if (t < 1) return c / 2 * t * t * t + b;
-            t -= 2;
-            return c / 2 * (t * t * t + 2) + b;
-        },
-        inBack: function(t, b, c, d, s) {
-            s = s || 1.70158;
-            return c * (t /= d) * t * ((s + 1) * t - s) + b;
-        }
-    };
-
-    // Bezier curve function
-    function cubeBezier(p0, c0, c1, p1, t) {
-        var p = new Point();
-        var nt = (1 - t);
-        p.x = nt * nt * nt * p0.x + 3 * nt * nt * t * c0.x + 3 * nt * t * t * c1.x + t * t * t * p1.x;
-        p.y = nt * nt * nt * p0.y + 3 * nt * nt * t * c0.y + 3 * nt * t * t * c1.y + t * t * t * p1.y;
-        return p;
-    }
 
     // Fallback for broken images
     $("img").on("error", function() {
@@ -372,33 +144,54 @@ document.addEventListener('contextmenu', function(e) {
 
 
 
-   // Function to toggle dark mode and store preference in localStorage
-const toggleDarkMode = () => {
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    // Toggle dark mode class on the body element
-    document.body.classList.toggle('dark-mode', darkModeToggle.checked);
-  
-    // Store the dark mode preference in localStorage
-    localStorage.setItem('darkMode', darkModeToggle.checked ? 'enabled' : 'disabled');
-  };
-  
-  // Check for saved user preference in localStorage
-  window.addEventListener('load', () => {
-    const darkModeSetting = localStorage.getItem('darkMode');
-    
-    // Set the checkbox based on the saved theme
-    if (darkModeSetting === 'enabled') {
-      document.getElementById('dark-mode-toggle').checked = true;
-      document.body.classList.add('dark-mode');
-    } else {
-      document.getElementById('dark-mode-toggle').checked = false;
-      document.body.classList.remove('dark-mode');
-    }
-  });
-  
-  // Add event listener to handle checkbox changes
-  document.getElementById('dark-mode-toggle').addEventListener('change', toggleDarkMode);
   
 
+
+    const services = [
+        {
+          title: "Web Development",
+          description: "Modern, responsive, and blazing-fast websites tailored to your needs.",
+          icon: "🌐"
+        },
+        {
+          title: "UI/UX Design",
+          description: "Beautiful and intuitive designs that enhance user experience.",
+          icon: "🎨"
+        },
+        {
+          title: "SEO Optimization",
+          description: "Boost your site's visibility and attract more customers.",
+          icon: "🚀"
+        },
+        {
+          title: "Branding & Identity",
+          description: "Crafting memorable brand experiences that stand out.",
+          icon: "💡"
+        }
+      ];
   
+      const servicesContainer = document.getElementById("services");
+  
+      services.forEach((service) => {
+        const card = document.createElement("div");
+        card.className = "card";
+  
+        card.innerHTML = `
+          <div class="icon">${service.icon}</div>
+          <div class="title">${service.title}</div>
+          <div class="desc">${service.description}</div>
+        `;
+  
+        servicesContainer.appendChild(card);
+      });
+   
+
+
+
+
+
+
 });
+
+
+

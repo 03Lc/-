@@ -62,51 +62,76 @@ body {
   transition: visibility 0s 0.5s, opacity 0.5s ease-out;
 }
 
-
-/*------------------------------------------------------------------
-  Login Button Styles
-------------------------------------------------------------------*/
+/* Modern & Futuristic Login Button */
 .login-btn {
-  background: linear-gradient(45deg, #ff5e00, #ff7700, #ff4500, #ff0000);
+  background: linear-gradient(45deg, #00f2fe, #4facfe, #00c6ff, #0072ff); /* Neon-inspired gradient */
   color: #fff;
-  font-size: 10px; /* Small font size */
-  font-weight: bold;
-  padding: 5px 10px; /* Compact padding */
-  border-radius: 15px; /* Smaller curve */
+  font-size: 16px; /* Slightly larger font for readability */
+  font-weight: 600;
+  padding: 15px 40px; /* Spacious padding for a clean look */
+  border-radius: 30px; /* Smooth, large radius for modern feel */
   border: 2px solid transparent;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6); /* Increased shadow effect */
+  box-shadow: 0 4px 15px rgba(0, 194, 255, 0.6), 0 0 30px rgba(0, 194, 255, 0.4); /* Neon shadows */
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  letter-spacing: 1px; /* Slight letter spacing for that techy vibe */
+  transition: all 0.4s ease; /* Smooth transition for all properties */
+  z-index: 1;
+  overflow: hidden;
 }
 
+/* Neon Border Effect */
 .login-btn:before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 250%; /* Increased the size of the flame effect */
-  height: 250%; /* Increased the size of the flame effect */
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(255, 0, 0, 0.7)); /* Stronger flame effect */
-  animation: flame-animation 1.2s infinite; /* Faster animation for more intensity */
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #00f2fe, #4facfe, #00c6ff, #0072ff);
+  background-size: 400% 400%; /* Makes the gradient more fluid */
+  animation: glowing-border 3s ease-in-out infinite; /* Glowing effect around the border */
+  z-index: 0;
 }
 
+/* Text Hover Effect */
 .login-btn:hover {
-  background: linear-gradient(45deg, #ff0000, #ff5e00, #ff7700);
+  background: linear-gradient(45deg, #00c6ff, #4facfe, #00f2fe, #0072ff); /* Reversed gradient on hover */
   color: #fff;
-  box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 50px rgba(255, 0, 0, 0.6); /* Stronger shadow on hover */
+  box-shadow: 0 8px 30px rgba(0, 194, 255, 0.8), 0 0 60px rgba(0, 194, 255, 0.5); /* Stronger neon shadow */
+  transform: scale(1.05) translateY(-3px); /* Slight lift on hover with scale */
 }
 
+/* Text Animation on Hover */
 .login-btn span {
   position: relative;
-  z-index: 2;
+  z-index: 1; /* Ensure the text is above the glowing effect */
+  transition: transform 0.4s ease, color 0.4s ease;
 }
 
-/* Enhanced flame animation for more dramatic effect */
+/* Shift text on hover */
+.login-btn:hover span {
+  transform: translateX(8px); /* Text slightly moves to the right */
+  color: #fff; /* Brightens the text */
+}
+
+/* Glowing Border Animation */
+@keyframes glowing-border {
+  0% {
+    background-position: 400% 0%;
+  }
+  50% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 400% 0%;
+  }
+}
+
+/* Flame Animation (Optional) */
 @keyframes flame-animation {
   0% {
     transform: translate(-50%, -50%) scale(1);
@@ -326,6 +351,42 @@ section .title::after {
 .scroll-up-btn:hover {
   filter: brightness(1.2);
 }
+@media (max-width: 768px) {
+  .menu-btn {
+    display: block;
+    z-index: 1001;
+  }
+
+  .navbar .menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: left 0.3s ease;
+  }
+
+  .navbar .menu.active {
+    left: 0;
+  }
+
+  .navbar .menu li {
+    display: block;
+    margin: 2px;
+  }
+
+  .navbar .menu li a {
+    font-size: 1.5rem;
+    margin-left: 0;
+  }
+}
+
 
 /*------------------------------------------------------------------
   Full Screen Modern Home Section (Updated)

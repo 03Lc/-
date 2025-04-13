@@ -109,7 +109,35 @@ setTimeout(() => {
     });
   
 
+      // Mobile menu toggle
+$('.menu-btn').click(function () {
+  $('.navbar .menu').toggleClass('active');
+  $('.menu-btn i').toggleClass('fa-times'); // change icon to 'X'
+});
 
+
+
+
+
+// Scroll-Up Button functionality
+const scrollUpBtn = document.querySelector('.scroll-up-btn');
+
+// Show the button when the user scrolls down
+window.onscroll = function() {
+  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    scrollUpBtn.classList.add('show');
+  } else {
+    scrollUpBtn.classList.remove('show');
+  }
+};
+
+// Scroll to top when the button is clicked
+scrollUpBtn.addEventListener('click', function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
 
 
 

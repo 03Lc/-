@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portal Reveal</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0033, #4b0082, #800080);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .portal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: radial-gradient(circle at center, rgba(0, 200, 255, 1) 0%, rgba(0, 0, 50, 0.5) 70%);
+      box-shadow: 0 0 60px rgba(0, 170, 255, 0.8), 0 0 120px rgba(0, 170, 255, 0.4);
+      mix-blend-mode: screen;
+      z-index: 1;
+      animation: portalGrow 2s ease-out forwards, portalPulse 3s ease-in-out infinite 2s;
+    }
+
+    @keyframes portalGrow {
+      0% { transform: translate(-50%, -50%) scale(0); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes portalPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      25% { transform: translate(-50%, -50%) scale(1.05); }
+      50% { transform: translate(-50%, -50%) scale(0.95); }
+      75% { transform: translate(-50%, -50%) scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div class="portal"></div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const sparkColors = ['#00ffee', '#ffe600', '#ffffff', '#66ccff', '#00ccff'];
+    const stars = [], sparks = [], tails = [];
+
+    class Spark {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 1.5 - 0.75;
+        this.speedY = Math.random() * -1.5 - 0.5;
+        this.alpha = Math.random() * 0.8 + 0.2;
+        this.color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+        this.life = Math.random() * 80 + 50;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        if (this.life <= 0) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.2 + 0.5;
+        this.alpha = Math.random() * 0.5 + 0.3;
+        this.twinkle = Math.random() * 0.02 + 0.01;
+      }
+      update() {
+        this.alpha += this.twinkle;
+        if (this.alpha >= 1 || this.alpha <= 0.3) this.twinkle *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.globalAlpha = this.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    class Tail {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = 0;
+        this.maxRadius = 250 + Math.random() * 100;
+        this.alpha = 1;
+      }
+      update() {
+        this.radius += 3;
+        this.alpha -= 0.01;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(0, 150, 255, ${this.alpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    for (let i = 0; i < 100; i++) sparks.push(new Spark());
+    for (let i = 0; i < 80; i++) stars.push(new Star());
+
+    setInterval(() => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      tails.push(new Tail(centerX, centerY));
+    }, 150);
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(s => { s.update(); s.draw(); });
+      sparks.forEach(s => { s.update(); s.draw(); });
+      tails.forEach((t, i) => {
+        t.update();
+        t.draw();
+        if (t.alpha <= 0) tails.splice(i, 1);
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // ✅ Redirect after 2 seconds
+    setTimeout(() => {
+      window.location.href = "maintenance.html"; // Change to your desired target page
+    }, 2000);
+
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', (event) => {
+      event.preventDefault(); // This prevents the default right-click menu
+      alert("Right-click is disabled on this page.");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital World</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto+Mono&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0033, #4b0082, #800080);
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      text-align: center;
+      z-index: 2;
+      opacity: 0;
+      animation: zoomIn 3s ease-out forwards 2s;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      font-size: 4rem;
+      background: linear-gradient(45deg, #ff00cc, #00ffee, #ffe600);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255,255,255,0.3);
+      animation: flickerText 2.5s infinite alternate;
+    }
+
+    @keyframes flickerText {
+      0% { opacity: 0.9; text-shadow: 0 0 10px #fff, 0 0 30px #fff; }
+      100% { opacity: 1; text-shadow: 0 0 25px #fff, 0 0 50px #fff; }
+    }
+
+    #storyBox {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.1rem;
+      color: #ffffffc0;
+      margin-top: 1.5rem;
+      padding: 0 2rem;
+      max-width: 700px;
+      margin-inline: auto;
+      text-align: center;
+      white-space: pre-line;
+      line-height: 1.6;
+      min-height: 150px;
+    }
+
+    #nextBtn {
+      display: none;
+      margin-top: 2rem;
+      padding: 12px 24px;
+      font-size: 1rem;
+      background: #00ffee;
+      border: none;
+      border-radius: 10px;
+      color: #1a0033;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 20px #00ffeeaa;
+      transition: all 0.3s ease;
+    }
+
+    #nextBtn:hover {
+      background: #fff;
+      color: #4b0082;
+      box-shadow: 0 0 30px #ffffffaa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Visual & Story Elements -->
+  <canvas id="magicCanvas"></canvas>
+  <div class="container">
+    <h1>DIGITAL WORLD</h1>
+    <div id="storyBox"></div>
+    <button id="nextBtn">Continue</button>
+  </div>
+
+  <script>
+    // ==== Canvas Animation ====
+    const canvas = document.getElementById('magicCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const sparkColors = ['#ff00cc', '#00ffee', '#ffe600', '#ff6600', '#00ff99'];
+    const stars = [], sparks = [];
+
+    class Spark {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 1.5 - 0.75;
+        this.speedY = Math.random() * -1.5 - 0.5;
+        this.alpha = Math.random() * 0.8 + 0.2;
+        this.color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+        this.life = Math.random() * 80 + 50;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        if (this.life <= 0) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.2 + 0.5;
+        this.alpha = Math.random() * 0.5 + 0.3;
+        this.twinkle = Math.random() * 0.02 + 0.01;
+      }
+      update() {
+        this.alpha += this.twinkle;
+        if (this.alpha >= 1 || this.alpha <= 0.3) this.twinkle *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.globalAlpha = this.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    for (let i = 0; i < 100; i++) sparks.push(new Spark());
+    for (let i = 0; i < 80; i++) stars.push(new Star());
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => { s.update(); s.draw(); });
+      sparks.forEach(s => { s.update(); s.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ==== Story & Button ====
+    const storyParagraphs = [
+      "In a hidden corner of the digital universe, there exists a secret portal — a gateway to Sudarshan's creations, ideas, and digital dreams."
+    ];
+
+    let storyIndex = 0;
+    const storyBox = document.getElementById('storyBox');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function typeStory(text, index = 0, callback) {
+      let currentText = "";
+      const speed = 45;
+      const punctuationPause = 350;
+      const commaPause = 200;
+
+      function typingEffect() {
+        currentText += text.charAt(index);
+        storyBox.innerHTML = currentText;
+        index++;
+
+        if (index < text.length) {
+          let char = text.charAt(index - 1);
+          let delay = speed;
+
+          if (char === "." || char === "!" || char === "?") {
+            delay = punctuationPause;
+          } else if (char === ",") {
+            delay = commaPause;
+          }
+
+          setTimeout(typingEffect, delay);
+        } else {
+          callback();
+        }
+      }
+
+      typingEffect();
+    }
+
+    function showStoryPart() {
+      storyBox.innerHTML = "";
+      nextBtn.style.display = "none";
+
+      typeStory(storyParagraphs[storyIndex], 0, () => {
+        nextBtn.innerText = storyIndex === storyParagraphs.length - 1 ? "Enter Portal" : "Continue";
+        nextBtn.style.display = "inline-block";
+      });
+    }
+
+    // Initial display after delay
+    setTimeout(() => {
+      showStoryPart();
+    }, 4000);
+
+    nextBtn.addEventListener("click", () => {
+      storyIndex++;
+      if (storyIndex < storyParagraphs.length) {
+        showStoryPart();
+      } else {
+        // Redirect to another HTML file
+        window.location.href = "portal2.html";
+      }
+    });
+
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', (event) => {
+      event.preventDefault(); // This prevents the default right-click menu
+      alert("Right-click is disabled on this page.");
+    });
+  </script>
+</body>
+</html>

@@ -148,6 +148,34 @@ scrollUpBtn.addEventListener('click', function() {
 
 
 
+const percentDisplay = document.getElementById("percent");
+const wave = document.getElementById("wave");
+
+let percent = 0;
+const waveHeight = 30; // height of the wave peaks
+const waveWidth = 600;
+const waveFrequency = 0.03;
+
+const interval = setInterval(() => {
+  if (percent >= 100) {
+    clearInterval(interval);
+    // Hide loader or transition here
+  } else {
+    percent++;
+    percentDisplay.textContent = percent;
+
+    const waveY = 150 - (percent * 1.5); // rise effect
+    let pathData = `M0,${waveY} `;
+
+    for (let x = 0; x <= waveWidth; x += 1) {
+      const y = waveY + Math.sin(x * waveFrequency + percent / 10) * waveHeight;
+      pathData += `L${x},${y} `;
+    }
+
+    pathData += `L${waveWidth},150 L0,150 Z`;
+    wave.setAttribute("d", pathData);
+  }
+}, 30);
 
 
     // Fallback for broken images
@@ -168,10 +196,14 @@ scrollUpBtn.addEventListener('click', function() {
         $(".preloader").fadeOut("slow", function() {
             $(this).remove();
         });
-    }, 1700); // 2 seconds fallback
+    }, 5500); // 5 seconds fallback
 
 
-
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+      document.querySelector('.preloader').classList.add('hidden');
+    });
+    
   
 
 
@@ -223,3 +255,12 @@ scrollUpBtn.addEventListener('click', function() {
 
 
 
+
+setTimeout(() => {
+  const preloader = document.getElementById("preloader");
+  if (preloader) {
+    preloader.classList.add("hidden");
+    document.body.classList.add("loaded");
+    setTimeout(() => preloader.remove(), 800);
+  }
+}, 4000);

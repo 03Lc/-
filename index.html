@@ -252,5 +252,49 @@
     }
   </style>
   <div class="elfsight-app-6ee170b9-e48a-469b-903c-69fb826ae81b" data-elfsight-app-lazy></div>
+
+
+
+
+
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCmiCCPzKEwFCTaHHoW6kmuL__pcFrY3M",
+      authDomain: "lc-website-4f733.firebaseapp.com",
+      projectId: "lc-website-4f733",
+      storageBucket: "lc-website-4f733.appspot.com",
+      messagingSenderId: "850717389320",
+      appId: "1:850717389320:web:cc07fa732f5e50bec2d7bd"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+  
+    window.sendMessageToFirestore = async function(name, email, subject, message) {
+      try {
+        await addDoc(collection(db, "contactMessages"), {
+          name,
+          email,
+          subject,
+          message,
+          date: new Date().toISOString(),
+          read: false
+        });
+        alert("✅ Message sent successfully!");
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        alert("❌ Failed to send message. Please try again.");
+      }
+    };
+  </script>
+  
+
+
+
 </body>
 </html>

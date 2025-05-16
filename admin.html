@@ -372,25 +372,70 @@
       showLogin();
     }
 
-    // Messages management
-    function loadMessages() {
-      const messagesContainer = document.getElementById('messages-list');
-      const unreadCountEl = document.getElementById('unread-count');
-      const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
-      messagesContainer.innerHTML = '';
+   import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      if (messages.length === 0) {
-        messagesContainer.innerHTML = '<p>No messages yet.</p>';
-        unreadCountEl.textContent = '0';
-        return;
-      }
+const db = getFirestore();
 
-      let unreadCount = 0;
+async function loadMessages() {
+  const messagesContainer = document.getElementById('messages-list');
+  const unreadCountEl = document.getElementById('unread-count');
+  messagesContainer.innerHTML = '';
+  
+  try {
+    const querySnapshot = await getDocs(collection(db, "contactMessages"));
+    let unreadCount = 0;
 
-      messages.forEach(msg => {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'message-item ' + (msg.read ? '' : 'unread');
-        if (!msg.read) unreadCount++;
+    if (querySnapshot.empty) {
+      messagesContainer.innerHTML = '<p>No messages yet.</p>';
+      unreadCountEl.textContent = '0';
+      return;
+    }
+
+    querySnapshot.forEach(docSnap => {
+      const msg = docSnap.data();
+      const msgId = docSnap.id;
+
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message-item ' + (msg.read ? '' : 'unread');
+      if (!msg.read) unreadCount++;
+
+      msgDiv.innerHTML = `
+        <div class="message-header">
+          <div class="message-info">
+            <div class="message-name">${msg.name}</div>
+            <div class="message-email">${msg.email}</div>
+            <div class="message-date">${new Date(msg.date).toLocaleString()}</div>
+          </div>
+        </div>
+        <div class="message-content">${msg.message}</div>
+        <div class="message-actions">
+          <button class="message-btn mark-read-btn">${msg.read ? 'Mark Unread' : 'Mark Read'}</button>
+          <button class="message-btn delete-msg-btn">Delete</button>
+        </div>
+      `;
+
+      msgDiv.querySelector('.mark-read-btn').addEventListener('click', async () => {
+        await updateDoc(doc(db, "contactMessages", msgId), { read: !msg.read });
+        loadMessages();
+      });
+
+      msgDiv.querySelector('.delete-msg-btn').addEventListener('click', async () => {
+        await deleteDoc(doc(db, "contactMessages", msgId));
+        loadMessages();
+      });
+
+      messagesContainer.appendChild(msgDiv);
+    });
+
+    unreadCountEl.textContent = unreadCount;
+
+  } catch (error) {
+    messagesContainer.innerHTML = `<p>Error loading messages: ${error.message}</p>`;
+    unreadCountEl.textContent = '0';
+    console.error("Firestore error:", error);
+  }
+}
+
 
         msgDiv.innerHTML = `
           <div class="message-header">

@@ -63,20 +63,31 @@ $(document).ready(function () {
     }
   });
 
-  // Contact form submission
-  document.querySelector('.contact-form').addEventListener('submit', function (e) {
+  document.querySelector('.contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const name = document.querySelector('input[type="text"]').value;
-    const email = document.querySelector('input[type="email"]').value;
-    const subject = document.querySelector('select').value;
-    const message = document.querySelector('textarea').value;
-
-    if (name && email && subject && message) {
-      alert(`Message Sent!\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`);
-    } else {
-      alert('Please fill in all fields.');
+  
+    const form = e.target;
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const email = form.querySelector('input[name="email"]').value.trim();
+    const subject = form.querySelector('select[name="subject"]').value.trim();
+    const message = form.querySelector('textarea[name="message"]').value.trim();
+  
+    if (!name || !email || !subject || !message) {
+      alert('Please fill out all fields');
+      return;
     }
+  
+    const contactMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+  
+    contactMessages.push({ name, email, subject, message, date: new Date().toISOString() });
+  
+    localStorage.setItem('contactMessages', JSON.stringify(contactMessages));
+  
+    alert('Thank you for your message!');
+  
+    form.reset();
   });
+  
 
   // Mobile menu toggle
   $('.menu-btn').click(function () {
@@ -161,6 +172,7 @@ $(document).ready(function () {
     }
   ];
 
+
   const servicesContainer = document.getElementById("services");
   services.forEach((service) => {
     const card = document.createElement("div");
@@ -172,4 +184,16 @@ $(document).ready(function () {
     `;
     servicesContainer.appendChild(card);
   });
+
+
+
+
+
+
+
+
+
+
+
+
 });

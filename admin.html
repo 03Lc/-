@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cosmic-deep: #0a0e23;
+      --cosmic-purple: #6e45e2;
+      --cosmic-pink: #b845d3;
+      --cosmic-teal: #11d8c6;
+      --text-light: rgba(255, 255, 255, 0.9);
+      --text-dark: #1a1a2e;
+      --transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: radial-gradient(ellipse at bottom, var(--cosmic-deep) 0%, #000000 100%);
+      color: var(--text-light);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #login-form, #admin-dashboard {
+      background: rgba(10, 14, 35, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 1px solid rgba(110, 69, 226, 0.2);
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(110, 69, 226, 0.5);
+    }
+    h2 {
+      color: var(--cosmic-teal);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      color: var(--cosmic-pink);
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1.2rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: linear-gradient(45deg, var(--cosmic-purple), var(--cosmic-pink));
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.1rem;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(110, 69, 226, 0.3);
+    }
+    .error-message {
+      background: rgba(255, 69, 58, 0.3);
+      padding: 0.6rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* Admin dashboard styles */
+    #admin-dashboard {
+      max-width: 900px;
+      display: none;
+      flex-direction: column;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .admin-title {
+      font-size: 1.8rem;
+      color: var(--cosmic-teal);
+    }
+    .logout-btn {
+      padding: 0.5rem 1.5rem;
+      background: linear-gradient(45deg, var(--cosmic-purple), var(--cosmic-pink));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(110, 69, 226, 0.3);
+    }
+    .admin-section {
+      background: rgba(10, 14, 35, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 1px solid rgba(110, 69, 226, 0.2);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--cosmic-teal);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .unread-count {
+      background: var(--cosmic-teal);
+      color: var(--text-dark);
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .messages-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .message-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: var(--transition);
+      border-left: 4px solid transparent;
+    }
+    .message-item.unread {
+      border-left-color: var(--cosmic-teal);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .message-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .message-name {
+      font-weight: 600;
+      color: var(--cosmic-teal);
+    }
+    .message-email {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .message-date {
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+    .message-content {
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+    .message-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+    .message-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    .mark-read-btn {
+      background: rgba(110, 69, 226, 0.2);
+      color: var(--text-light);
+    }
+    .mark-read-btn:hover {
+      background: rgba(110, 69, 226, 0.3);
+    }
+    .delete-msg-btn {
+      background: rgba(255, 69, 58, 0.2);
+      color: var(--text-light);
+    }
+    .delete-msg-btn:hover {
+      background: rgba(255, 69, 58, 0.3);
+    }
+
+
+    body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -20%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 25% 25%, rgba(110, 69, 226, 0.2), transparent 70%),
+              radial-gradient(circle at 75% 75%, rgba(11, 216, 198, 0.15), transparent 70%);
+  animation: cosmic-float 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes cosmic-float {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-5%, -5%); }
+  100% { transform: translate(0, 0); }
+}
+#login-form {
+    position: relative;
+    width: 350px;
+    padding: 2rem;
+    background: #121212;
+    border-radius: 12px;
+    margin: 2rem auto;
+    color: white;
+  }
+
+  #close-login-btn {
+    position: absolute;
+    top: 1px;
+    left: -150px;  /* <-- top left */
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: #369d16;
+    cursor: pointer;
+  }
+
+#close-login-btn:hover {
+  color: var(--cosmic-pink);
+}
+
+  </style>
+</head>
+<body>
+  <div id="login-form" style="position: relative;">
+  <button id="close-login-btn" onclick="closeLoginForm()" title="Close Login">✖</button>
+
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <img src="lc-logo.png" alt="Logo" style="height: 70px; border-radius: 12px;" />
+  </div>
+
+  <h2>Admin Login</h2>
+  <p style="text-align:center; color: var(--cosmic-pink); font-size: 0.95rem; margin-bottom: 1.5rem;">
+    Welcome back, space captain 🚀
+  </p>
+  <div id="login-error" class="error-message" style="display:none;"></div>
+
+  <form onsubmit="return handleLogin(event)">
+    <label for="username">Username</label>
+    <input id="username" type="text" placeholder="Enter username" autocomplete="username" required />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required />
+
+    <button type="submit">Login</button>
+  </form>
+</div>
+  
+  
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-dashboard" style="display:none;">
+    <div class="admin-header">
+      <h1 class="admin-title">Admin Dashboard</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    <section class="admin-section">
+      <h2 class="section-title">
+        Messages <span class="unread-count" id="unread-count">0</span>
+      </h2>
+      <div class="messages-list" id="messages-list"></div>
+    </section>
+  </div>
+
+  <script>
+    // Hardcoded login credentials for demo:
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'amind';
+
+    // Check if logged in on page load
+    window.onload = () => {
+      if(localStorage.getItem('isLoggedIn') === 'true'){
+        showDashboard();
+      } else {
+        showLogin();
+      }
+      if(!localStorage.getItem('contactMessages')) {
+        // Add demo messages if none exist
+        const demoMessages = [
+          {
+            id: crypto.randomUUID(),
+            name: "Sudarshan",
+            email: "sudarshan@example.com",
+            date: new Date().toISOString(),
+            message: "Hey! I love the cosmic theme of this dashboard.",
+            read: false
+          },
+          {
+            id: crypto.randomUUID(),
+            name: "Alex Doe",
+            email: "alex@sample.com",
+            date: new Date().toISOString(),
+            message: "Could you add export-to-CSV in the next update?",
+            read: true
+          }
+        ];
+        localStorage.setItem('contactMessages', JSON.stringify(demoMessages));
+      }
+    };
+
+    function showLogin() {
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('admin-dashboard').style.display = 'none';
+      document.getElementById('login-error').style.display = 'none';
+      clearLoginInputs();
+    }
+    function showDashboard() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('admin-dashboard').style.display = 'flex';
+      loadMessages();
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if(username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        localStorage.setItem('isLoggedIn', 'true');
+        showDashboard();
+      } else {
+        const errorEl = document.getElementById('login-error');
+        errorEl.textContent = 'Invalid username or password';
+        errorEl.style.display = 'block';
+      }
+      return false;
+    }
+
+    function logout() {
+      localStorage.setItem('isLoggedIn', 'false');
+      showLogin();
+    }
+
+    // Messages management
+    function loadMessages() {
+      const messagesContainer = document.getElementById('messages-list');
+      const unreadCountEl = document.getElementById('unread-count');
+      const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+      messagesContainer.innerHTML = '';
+
+      if (messages.length === 0) {
+        messagesContainer.innerHTML = '<p>No messages yet.</p>';
+        unreadCountEl.textContent = '0';
+        return;
+      }
+
+      let unreadCount = 0;
+
+      messages.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message-item ' + (msg.read ? '' : 'unread');
+        if (!msg.read) unreadCount++;
+
+        msgDiv.innerHTML = `
+          <div class="message-header">
+            <div class="message-info">
+              <div class="message-name">${escapeHtml(msg.name)}</div>
+              <div class="message-email">${escapeHtml(msg.email)}</div>
+              <div class="message-date">${new Date(msg.date).toLocaleString()}</div>
+            </div>
+          </div>
+          <div class="message-content">${escapeHtml(msg.message)}</div>
+          <div class="message-actions">
+            <button class="message-btn mark-read-btn">${msg.read ? 'Mark Unread' : 'Mark Read'}</button>
+            <button class="message-btn delete-msg-btn">Delete</button>
+          </div>
+        `;
+
+        msgDiv.querySelector('.mark-read-btn').addEventListener('click', () => toggleRead(msg.id));
+        msgDiv.querySelector('.delete-msg-btn').addEventListener('click', () => deleteMessage(msg.id));
+
+        messagesContainer.appendChild(msgDiv);
+      });
+
+      unreadCountEl.textContent = unreadCount;
+    }
+
+    function toggleRead(id) {
+      let messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+      messages = messages.map(msg => msg.id === id ? { ...msg, read: !msg.read } : msg);
+      localStorage.setItem('contactMessages', JSON.stringify(messages));
+      loadMessages();
+    }
+
+    function deleteMessage(id) {
+      let messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+      messages = messages.filter(msg => msg.id !== id);
+      localStorage.setItem('contactMessages', JSON.stringify(messages));
+      loadMessages();
+    }
+
+    function clearLoginInputs() {
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    // Basic HTML escaping for safety
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
+    }
+
+    function closeLoginForm() {
+  document.getElementById('login-form').style.display = 'none';
+}
+
+
+
+
+ // Disable right-click context menu
+ document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+    });
+
+    // Disable certain keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Disable Ctrl+U (View Source)
+      if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+      }
+      // Disable Ctrl+S (Save page)
+      if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+      }
+      // Disable Ctrl+Shift+I (DevTools)
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+        e.preventDefault();
+      }
+      // Disable F12 (DevTools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+    });
+
+
+
+  function closeLoginForm() {
+    if (document.referrer) {
+      history.back();
+    } else {
+      window.location.href = 'index.html'; // Change to your desired fallback page
+    }
+  }
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>

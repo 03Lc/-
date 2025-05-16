@@ -455,6 +455,19 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
  // Disable right-click context menu
  document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
@@ -503,6 +516,91 @@
 
 
   </script>
+
+
+
+
+
+
+
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCCmiCCPzKEwFCTaHHoW6kmuL__pcFrY3M",
+    authDomain: "lc-website-4f733.firebaseapp.com",
+    projectId: "lc-website-4f733",
+    storageBucket: "lc-website-4f733.appspot.com",
+    messagingSenderId: "850717389320",
+    appId: "1:850717389320:web:cc07fa732f5e50bec2d7bd"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const messagesList = document.getElementById("messages-list");
+  const unreadCountEl = document.getElementById("unread-count");
+
+  async function loadMessages() {
+    const querySnapshot = await getDocs(collection(db, "contactMessages"));
+    messagesList.innerHTML = "";
+    let unreadCount = 0;
+
+    querySnapshot.forEach(docSnap => {
+      const msg = docSnap.data();
+      const msgId = docSnap.id;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = `message-item ${msg.read ? '' : 'unread'}`;
+      if (!msg.read) unreadCount++;
+
+      wrapper.innerHTML = `
+        <div class="message-header">
+          <div class="message-info">
+            <span class="message-name">${msg.name}</span>
+            <span class="message-email">${msg.email}</span>
+            <span class="message-date">${new Date(msg.date).toLocaleString()}</span>
+          </div>
+        </div>
+        <div class="message-content">${msg.message}</div>
+        <div class="message-actions">
+          <button class="message-btn mark-read-btn">${msg.read ? 'Mark Unread' : 'Mark Read'}</button>
+          <button class="message-btn delete-msg-btn">Delete</button>
+        </div>
+      `;
+
+      // Add event listeners
+      wrapper.querySelector('.mark-read-btn').addEventListener('click', async () => {
+        await updateDoc(doc(db, "contactMessages", msgId), { read: !msg.read });
+        loadMessages();
+      });
+
+      wrapper.querySelector('.delete-msg-btn').addEventListener('click', async () => {
+        await deleteDoc(doc(db, "contactMessages", msgId));
+        loadMessages();
+      });
+
+      messagesList.appendChild(wrapper);
+    });
+
+    unreadCountEl.textContent = unreadCount;
+  }
+
+  window.onload = loadMessages;
+</script>
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>

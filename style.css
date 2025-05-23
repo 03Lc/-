@@ -90,6 +90,63 @@ body.loaded {
 }
 
 
+
+/*------------------------------------------------------------------
+  Chatbot
+------------------------------------------------------------------*/
+#chatbot-container {
+  position: fixed;
+  bottom: 90px; /* Lower position, less vertical intrusion */
+  right: 30px;
+  z-index: 9999;
+}
+
+#chatbot-frame {
+  width: 365px;
+  height: 458px;  /* Reduced from 500px */
+  border: none;
+  display: none;
+  border-radius: 14px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+#toggle-chatbot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+}
+
+#chatbot-container.active #chatbot-frame {
+  display: block;
+}
+
+/* Responsive: tighter on mobile */
+@media (max-width: 480px) {
+  #chatbot-frame {
+    width: 90vw;
+    height: 5vh;  /* Smaller vertical space */
+    max-height: 400px;
+  }
+
+  #toggle-chatbot {
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+  }
+}
+
+
+
 /*------------------------------------------------------------------
   Content Layout & Typography
 ------------------------------------------------------------------*/
@@ -1624,4 +1681,3 @@ footer span a {
     line-height: 38px;
   }
 }
-

@@ -88,6 +88,17 @@ $(document).ready(function () {
 
   
 
+
+
+
+
+
+
+
+
+
+
+
   // Mobile menu toggle
   $('.menu-btn').click(function () {
     $('.navbar .menu').toggleClass('active');
@@ -172,6 +183,19 @@ $(document).ready(function () {
   ];
 
 
+
+
+
+
+  document.getElementById("toggle-chatbot").addEventListener("click", () => {
+    document.getElementById("chatbot-container").classList.toggle("active");
+  });
+
+
+
+
+
+  
 
   const servicesContainer = document.getElementById("services");
   services.forEach((service) => {

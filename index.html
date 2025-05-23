@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LC</title>
-  <link rel="stylesheet" href="style1.css" />
+  <!-- Use the correct, responsive stylesheet -->
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
   <link rel="icon" type="image/png" href="lc-logo.png" />
@@ -240,7 +241,16 @@
     </div>
   </footer>
 
-  <iframe src="https://03lc.github.io/lc-chatbot/" style="position:fixed;bottom:60px;right:10px;width:180vw;max-width:450px;height:50vh;max-height:500px;border:none;z-index:1000;"></iframe>
+  <div id="chatbot-container">
+    <iframe
+      id="chatbot-frame"
+      src="https://03lc.github.io/lc-chatbot/"
+      allow="microphone"
+      title="Chatbot"
+    ></iframe>
+    <button id="toggle-chatbot">💬</button>
+  </div>
+  
 
   <script src="script.js"></script>
   <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>

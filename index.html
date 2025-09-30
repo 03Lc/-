@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
- <title>✨🪄 Coded With Magic 🧙‍♂️💻</title>
-<!-- Use the correct, responsive stylesheet -->
+  <title>LC</title>
+  <!-- Use the correct, responsive stylesheet -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -15,6 +15,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 </head>
 <body>
+  <div id="top"></div>
+
   <div id="preloader" class="preloader loader">
     <div class="preloader-content">
       <svg viewBox="0 0 600 150" width="100%" height="220">
@@ -46,22 +48,43 @@
   
   
   
-  <div class="scroll-up-btn"><i class="fas fa-angle-up"></i></div>
-  <nav class="navbar">
-    <div class="max-width">
-      <div class="logo"><a href="#">L<span>C</span></a></div>
-      <ul class="menu">
-        <li><a href="#home" class="menu-btn">Home</a></li>
-        <li><a href="#about" class="menu-btn">About</a></li>
-        <li><a href="#services" class="menu-btn">Services</a></li>
-        <li><a href="#skills" class="menu-btn">Skills</a></li>
-        <li><a href="#achievements" class="menu-btn">Achievements</a></li>
-        <li><a href="#teams" class="menu-btn">Teams</a></li>
-        <li><a href="#contact" class="menu-btn">Contact</a></li>
-        <li><a href="admin.html" id="adminLoginBtn" class="login-btn"><span>Admin LOGIN</span></a> </li>
+  <a href="#top" class="scroll-up-btn">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  
+  
 
+  <!-- Navbar -->
+  <nav class="unique-navbar">
+    <div class="max-width nav-inner">
+      <!-- Logo -->
+      <div class="logo"><a href="#">L<span>C</span></a></div>
+
+      <!-- Menu -->
+      <ul class="nav-menu">
+        <li><a href="#home" class="menu-btn"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#about" class="menu-btn"><i class="fas fa-user"></i> About</a></li>
+        <li><a href="#services" class="menu-btn"><i class="fas fa-briefcase"></i> Services</a></li>
+        <li><a href="#skills" class="menu-btn"><i class="fas fa-code"></i> Skills</a></li>
+
+        <!-- More Dropdown -->
+        <li class="dropdown">
+          <span class="menu-btn dropdown-toggle"><i class="fas fa-folder-open"></i> More</span>
+          <ul class="dropdown-menu">
+            <li><a href="#achievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+            <li><a href="#teams"><i class="fas fa-users"></i> Teams</a></li>
+            <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="admin.html"><i class="fas fa-key"></i> Admin LOGIN</a></li>
+          </ul>
+        </li>
       </ul>
-      <div class="menu-btn"><i class="fas fa-bars"></i></div>
+
+      <!-- Hamburger Menu -->
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   </nav>
   
@@ -118,8 +141,8 @@
           <a href="#" class="read-more-btn">📖</a>
         </div>
         <div class="skills-bars">
-          <div class="bar"><div class="info"><span>HTML</span><span>18%</span></div><div class="line html"></div></div>
-          <div class="bar"><div class="info"><span>CSS</span><span>12%</span></div><div class="line css"></div></div>
+          <div class="bar"><div class="info"><span>HTML</span><span>46%</span></div><div class="line html"></div></div>
+          <div class="bar"><div class="info"><span>CSS</span><span>23%</span></div><div class="line css"></div></div>
           <div class="bar"><div class="info"><span>JavaScript</span><span>6%</span></div><div class="line js"></div></div>
           <div class="bar"><div class="info"><span>MySQL</span><span>5%</span></div><div class="line mysql"></div></div>
           <div class="bar"><div class="info"><span>C</span><span>7%</span></div><div class="line c"></div></div>
@@ -302,6 +325,8 @@
     };
   </script>
   
+
+
 
 
   

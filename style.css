@@ -1645,29 +1645,6 @@ footer span a {
 
 
 
-/*------------------------------------------------------------------
-  login
-------------------------------------------------------------------*/
-.login-btn {
-  color: #fff;
-  padding: 10px 20px;
-  background: #6200ea;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.login-btn:hover {
-  background: #3700b3;
-}
-
-
-
-
-
-
-
-
-
 
 /*------------------------------------------------------------------
   Responsive Media Queries

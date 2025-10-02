@@ -9,8 +9,6 @@ $(document).ready(function () {
     else scrollUpBtn.classList.remove("show");
   });
 
- 
-
   // Disable right-click
   document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -19,6 +17,13 @@ $(document).ready(function () {
     strings: ["Student", "Freelancer"],
     typeSpeed: 100,
     backSpeed: 60,
+    loop: true
+  });
+
+  new Typed(".typing-2", {
+    strings: ["Developer", "Designer", "student"],
+    typeSpeed: 80,
+    backSpeed: 50,
     loop: true
   });
 
@@ -32,8 +37,6 @@ $(document).ready(function () {
   okBtn.on('click', () => popup.fadeOut(300));
   $(window).on('click', e => { if ($(e.target).is(popup)) popup.fadeOut(300); });
 
-  setTimeout(() => creepyTypewriter("☠️ This site is just for fun. Expect bugs. Expect chaos. Proceed if you dare.", ".popup-typewriter"), 4100);
-
   // Owl carousel
   $('.carousel').owlCarousel({
     margin: 20,
@@ -42,23 +45,6 @@ $(document).ready(function () {
     autoplayTimeout: 2000,
     autoplayHoverPause: true,
     responsive: { 0: { items: 1 }, 600: { items: 2 }, 1000: { items: 3 } }
-  });
-
-  // Contact form submission
-  $('.contact-form').on('submit', function (e) {
-    e.preventDefault();
-    const form = this;
-    const name = form.querySelector('input[name="name"]').value.trim();
-    const email = form.querySelector('input[name="email"]').value.trim();
-    const subject = form.querySelector('select[name="subject"]').value.trim();
-    const message = form.querySelector('textarea[name="message"]').value.trim();
-
-    if (!name || !email || !subject || !message) { alert('Please fill out all fields'); return; }
-
-    if (typeof sendMessageToFirestore === "function") sendMessageToFirestore(name, email, subject, message);
-    else alert("❌ Firebase not ready. Try reloading.");
-
-    form.reset();
   });
 
   // Unique-navbar mobile menu + dropdowns
@@ -138,27 +124,14 @@ $(document).ready(function () {
   // Fallback for broken images
   $("img").on("error", function () { $(this).attr("src", "fallback-image.jpg"); });
 
+  // Services section
   const services = [
-    {
-      icon: "💻",
-      title: "Web Development",
-      description: "Building responsive and modern websites."
-    },
-    {
-      icon: "🎨",
-      title: "UI/UX Design",
-      description: "Designing user-friendly interfaces."
-    },
-    {
-      icon: "⚡",
-      title: "Performance Optimization",
-      description: "Making websites faster and efficient."
-    }
+    { icon: "💻", title: "Web Development", description: "Building responsive and modern websites." },
+    { icon: "🎨", title: "UI/UX Design", description: "Designing user-friendly interfaces." },
+    { icon: "⚡", title: "Performance Optimization", description: "Making websites faster and efficient." }
   ];
-
   const servicesContainer = document.getElementById("services");
-
-  services.forEach((service) => {
+  services.forEach(service => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
@@ -168,8 +141,6 @@ $(document).ready(function () {
     `;
     servicesContainer.appendChild(card);
   });
-
-  // Add "Coming Soon" card at the end
   const comingSoonCard = document.createElement("div");
   comingSoonCard.className = "card coming-soon";
   comingSoonCard.innerHTML = `
@@ -181,62 +152,71 @@ $(document).ready(function () {
 
   // Particle canvas
   const canvas = document.getElementById('particle-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const particles = [];
-
-  class Particle {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.size = Math.random() * 4 + 1;
-      this.speedX = Math.random() * 3 - 1.5;
-      this.speedY = Math.random() * 3 - 1.5;
-      this.alpha = 1;
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      this.alpha -= 0.02;
-    }
-    draw() {
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = 'cyan';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = particles.length - 1; i >= 0; i--) {
-      particles[i].update();
-      particles[i].draw();
-      if (particles[i].alpha <= 0) {
-        particles.splice(i, 1);
-      }
-    }
-    requestAnimationFrame(animateParticles);
-  }
-
-  window.addEventListener('mousemove', e => {
-    for (let i = 0; i < 5; i++) {
-      particles.push(new Particle(e.x, e.y));
-    }
-  });
-
-  window.addEventListener('resize', () => {
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-  });
+    const particles = [];
+    class Particle {
+      constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 4 + 1; this.speedX = Math.random() * 3 - 1.5; this.speedY = Math.random() * 3 - 1.5; this.alpha = 1; }
+      update() { this.x += this.speedX; this.y += this.speedY; this.alpha -= 0.02; }
+      draw() { ctx.globalAlpha = this.alpha; ctx.fillStyle = 'cyan'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; }
+    }
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) particles.splice(i, 1);
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    window.addEventListener('mousemove', e => { for (let i = 0; i < 5; i++) particles.push(new Particle(e.x, e.y)); });
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    animateParticles();
+  }
 
-  animateParticles();
   // Chatbot toggle
   document.getElementById("toggle-chatbot").addEventListener("click", () => {
     document.getElementById("chatbot-container").classList.toggle("active");
   });
+
+  // --- Contact Form Submission (Formspree) ---
+
+  const form = document.getElementById('contact-form');
+  const sendBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent default submission
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => data[key] = value);
+
+    // Change button text to Sending...
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
+
+    try {
+      const response = await fetch('https://formspree.io/f/xanporpk', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert(`✅ ${data.name}, your message has been sent!`);
+        form.reset();
+      } else {
+        alert("❌ Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to send message. Please try again.");
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send";
+    }
+  });
+
 });

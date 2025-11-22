@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Live Updates</title>
+<title>Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -75,6 +75,67 @@ input:focus{background:rgba(255,255,255,0.15);}
 @media(max-width:900px){#dashboard{flex-direction:column;}.sidebar{width:100%;flex-direction:row;justify-content:space-around;padding:1rem;border-right:none;border-bottom:1px solid var(--glass-border);}.sidebar a{margin-bottom:0;}}
 </style>
 </head>
+
+
+<!-- SECURITY LOCK SCRIPT -->
+<style>
+  /* Disable text selection */
+  * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+</style>
+
+<script>
+  // Disable Right Click
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
+  // Disable Dragging (images, text, etc.)
+  document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+  });
+
+  // Disable Developer Shortcuts
+  document.addEventListener('keydown', function(e) {
+    
+    // F12
+    if (e.key === "F12") {
+      e.preventDefault();
+    }
+
+    // Ctrl + Shift + I (Inspect)
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") {
+      e.preventDefault();
+    }
+
+    // Ctrl + Shift + J (Console)
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") {
+      e.preventDefault();
+    }
+
+    // Ctrl + U (View Source)
+    if (e.ctrlKey && e.key.toLowerCase() === "u") {
+      e.preventDefault();
+    }
+
+    // Ctrl + S (Save Page)
+    if (e.ctrlKey && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+    }
+
+    // Ctrl + C / Ctrl + V / Ctrl + X (Copy/Paste)
+    if (e.ctrlKey && ["c", "v", "x"].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+
+
 <body>
 
 <!-- LOGIN SCREEN -->
@@ -144,6 +205,8 @@ function closeLogin(){ loginScreen.style.display="none"; }
 function showDashboard(){ loginScreen.classList.remove("active"); dashboard.classList.add("active"); fetchMessages(); }
 function logout(){ dashboard.classList.remove("active"); loginScreen.classList.add("active"); document.getElementById("error-message").style.display="none"; document.getElementById("username").value=""; document.getElementById("password").value=""; }
 
+
+<!--
 // FETCH FORM-SPREE MESSAGES
 async function fetchMessages(){
   try{
@@ -162,6 +225,8 @@ async function fetchMessages(){
     renderMessages();
   }catch(err){ console.error(err); alert("Failed to fetch messages."); }
 }
+
+
 
 // RENDER
 function renderMessages(filtered=messages){
@@ -190,6 +255,7 @@ function renderMessages(filtered=messages){
   });
   unreadCountEl.textContent=unreadCount;
 }
+-->
 
 // SEARCH
 function searchMessages(){
@@ -227,7 +293,7 @@ function closeLogin() {
 
     // Fallback: If closing fails, redirect back to your main website
     setTimeout(() => {
-        window.location.href = "https://sudarshansharma.com.np"; // ← replace this
+        window.location.href = "https://sudarshansharma.com.np";
     }, 150);
 }
 

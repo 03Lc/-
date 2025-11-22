@@ -1,61 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 Page</title>
-  <link rel="stylesheet" href="404.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Cosmic Cyberpunk</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(#0b0c10, #1c1c1c);
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #0ff;
+  }
+
+  h1 {
+    font-size: 12rem;
+    text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+    animation: glitch 1s infinite;
+    z-index: 2;
+    position: relative;
+    transform-origin: center;
+  }
+
+  @keyframes glitch {
+    0% { transform: translate(0px,0px) rotate(0deg) scale(1); text-shadow: 2px 0 #f0f, -2px 0 #0ff; }
+    25% { transform: translate(2px,-2px) rotate(1deg) scale(1.02); text-shadow: -2px 2px #0ff, 2px -2px #f0f; }
+    50% { transform: translate(-1px,1px) rotate(-1deg) scale(0.98); text-shadow: 2px -2px #f0f, -2px 2px #0ff; }
+    75% { transform: translate(1px,1px) rotate(1deg) scale(1.01); text-shadow: -2px 0 #0ff, 2px 0 #f0f; }
+    100% { transform: translate(0,0) rotate(0deg) scale(1); text-shadow: 2px 0 #f0f, -2px 0 #0ff; }
+  }
+
+  p {
+    font-size: 1.5rem;
+    margin-top: -20px;
+    text-align: center;
+    z-index: 2;
+    animation: textGlow 2s infinite alternate;
+  }
+
+  @keyframes textGlow {
+    0% { color: #0ff; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff; }
+    100% { color: #f0f; text-shadow: 0 0 15px #f0f, 0 0 30px #f0f; }
+  }
+
+  a {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 40px;
+    color: #0ff;
+    border: 2px solid #0ff;
+    border-radius: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.2rem;
+    animation: pulse 2s infinite alternate;
+    overflow: hidden;
+  }
+
+  a:hover {
+    background: #0ff;
+    color: #1c1c1c;
+    box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+    transform: scale(1.1);
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
+    100% { box-shadow: 0 0 20px #0ff, 0 0 40px #0ff; }
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+</style>
 </head>
 <body>
-  <div class="moon"></div>
-  <div class="moon__crater moon__crater1"></div>
-  <div class="moon__crater moon__crater2"></div>
-  <div class="moon__crater moon__crater3"></div>
 
-  <div class="star star1"></div>
-  <div class="star star2"></div>
-  <div class="star star3"></div>
-  <div class="star star4"></div>
-  <div class="star star5"></div>
+<h1>404</h1>
+<p>“Oops! This page ran off… probably looking for someone 💕”</p>
+<a href="index.html">Go Back Home</a>
 
-  <div class="error">
-    <div class="error__title">404</div>
-    <div class="error__subtitle">Oops...!</div>
-    <div class="error__description">One of our astronauts fell asleep in orbit,<br>This page is drifting in space. Don’t worry, <br> we’ll teleport you back on track!</div>
-    <button class="back__button error__button--active" onclick="window.location.href = '/'">
-      Take Me Home, Captain!
-  </button>
-    
-  </div>
+<canvas id="canvas"></canvas>
 
-  <div class="astronaut">
-    <div class="astronaut__backpack"></div>
-    <div class="astronaut__body"></div>
-    <div class="astronaut__body__chest"></div>
-    <div class="astronaut__arm-left1"></div>
-    <div class="astronaut__arm-left2"></div>
-    <div class="astronaut__arm-right1"></div>
-    <div class="astronaut__arm-right2"></div>
-    <div class="astronaut__arm-thumb-left"></div>
-    <div class="astronaut__arm-thumb-right"></div>
-    <div class="astronaut__leg-left"></div>
-    <div class="astronaut__leg-right"></div>
-    <div class="astronaut__foot-left"></div>
-    <div class="astronaut__foot-right"></div>
-    <div class="astronaut__wrist-left"></div>
-    <div class="astronaut__wrist-right"></div>
-    
-    <div class="astronaut__cord">
-      <canvas id="cord" height="5000" width="500"></canvas>
-    </div>
-    
-    <div class="astronaut__head">
-      <canvas id="visor" width="60" height="60"></canvas>
-      <div class="astronaut__head-visor-flare1"></div>
-      <div class="astronaut__head-visor-flare2"></div>
-    </div>
-  </div>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  <script src="404.js"></script>
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random()*canvas.width;
+    this.y = Math.random()*canvas.height;
+    this.z = Math.random()*canvas.width; // depth for 3D effect
+    this.size = Math.random()*2 + 1;
+    this.speed = Math.random()*2 + 0.5;
+    this.color = `hsl(${Math.random()*360},100%,50%)`;
+  }
+  update() {
+    this.z -= this.speed;
+    if(this.z < 1){
+      this.reset();
+      this.z = canvas.width;
+    }
+  }
+  draw() {
+    const sx = (this.x - canvas.width/2) * (canvas.width/this.z) + canvas.width/2;
+    const sy = (this.y - canvas.height/2) * (canvas.width/this.z) + canvas.height/2;
+    const s = (canvas.width/this.z) * this.size;
+    ctx.beginPath();
+    ctx.arc(sx, sy, s, 0, Math.PI*2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+const particles = [];
+for(let i=0;i<300;i++) particles.push(new Particle());
+
+function animate() {
+  ctx.fillStyle = "rgba(12,12,12,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Handle window resize
+window.addEventListener('resize', ()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+
+
+
+  // Disable Right Click
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+  // Disable Dragging
+  document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+
+  // Disable Developer Shortcuts
+  document.addEventListener('keydown', function(e) {
+    if(e.key === "F12") e.preventDefault();
+    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") e.preventDefault();
+    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") e.preventDefault();
+    if(e.ctrlKey && e.key.toLowerCase() === "u") e.preventDefault();
+    if(e.ctrlKey && ["c","v","x","s"].includes(e.key.toLowerCase())) e.preventDefault();
+  });
+
+  // Disable Text Selection
+  document.body.style.userSelect = "none";
+  document.body.style.webkitUserSelect = "none";
+  document.body.style.mozUserSelect = "none";
+  document.body.style.msUserSelect = "none";
+
+
+</script>
+
+
 </body>
 </html>
+

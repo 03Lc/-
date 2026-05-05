@@ -256,15 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
   });
 
-  // Basic DevTools detection (deterrent only)
-  setInterval(function () {
-    if (
-      window.outerWidth - window.innerWidth > 100 ||
-      window.outerHeight - window.innerHeight > 100
-    ) {
-      document.body.innerHTML =
-        "<h1 style='color:red;text-align:center;margin-top:20%'>Nice try 👀</h1>";
-    }
-  }, 1000);
+  // DevTools detection removed — was falsely triggering on mobile devices
+  // due to browser chrome (address bar, nav bars) affecting outerHeight/innerHeight.
 
 });

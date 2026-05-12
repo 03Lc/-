@@ -281,7 +281,7 @@ function showToast(message, type = 'success') {
       }
     } catch(err) {
       setBtnState('error');
-      showToast('Failed to send. Please email me directly at workinglc65@gmail.com', 'error');
+      showToast('Failed to send. Please email me directly at workinglc07@gmail.com', 'error');
       setTimeout(resetBtn, 5000);
     }
   });

@@ -111,12 +111,95 @@ document.querySelectorAll('.svc-card').forEach(card=>{
   });
 });
 
+// --------- Toast helper ---------
+function showToast(message, type = 'success') {
+  // Remove any existing toast
+  const existing = document.getElementById('lc-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'lc-toast';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+
+  const isSuccess = type === 'success';
+  toast.innerHTML = `
+    <span class="lc-toast-icon">${isSuccess ? '✓' : '✗'}</span>
+    <span class="lc-toast-msg">${message}</span>
+    <button class="lc-toast-close" aria-label="Dismiss">×</button>
+  `;
+
+  // Inline styles so no CSS file edit needed
+  Object.assign(toast.style, {
+    position: 'fixed',
+    bottom: '2rem',
+    left: '50%',
+    transform: 'translateX(-50%) translateY(80px)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    padding: '14px 20px',
+    borderRadius: '14px',
+    background: isSuccess
+      ? 'linear-gradient(135deg, #0d2b1f, #0f3d28)'
+      : 'linear-gradient(135deg, #2b0d0d, #3d1010)',
+    border: `1px solid ${isSuccess ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'}`,
+    boxShadow: `0 8px 32px ${isSuccess ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)'}, 0 2px 8px rgba(0,0,0,0.4)`,
+    color: isSuccess ? '#86efac' : '#fca5a5',
+    fontSize: '0.9rem',
+    fontWeight: '500',
+    fontFamily: 'inherit',
+    zIndex: '99999',
+    minWidth: '260px',
+    maxWidth: 'calc(100vw - 2rem)',
+    backdropFilter: 'blur(16px)',
+    transition: 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease',
+    opacity: '0',
+  });
+
+  // Icon style
+  const icon = toast.querySelector('.lc-toast-icon');
+  Object.assign(icon.style, {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    width: '24px', height: '24px', borderRadius: '50%', flexShrink: '0',
+    background: isSuccess ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)',
+    fontSize: '0.8rem', fontWeight: '700',
+  });
+
+  // Close button style
+  const closeBtn = toast.querySelector('.lc-toast-close');
+  Object.assign(closeBtn.style, {
+    marginLeft: 'auto', background: 'none', border: 'none',
+    color: 'inherit', cursor: 'pointer', fontSize: '1.1rem',
+    opacity: '0.6', padding: '0 2px', lineHeight: '1',
+  });
+
+  document.body.appendChild(toast);
+
+  // Animate in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      toast.style.opacity = '1';
+    });
+  });
+
+  function dismissToast() {
+    toast.style.transform = 'translateX(-50%) translateY(80px)';
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 350);
+  }
+
+  closeBtn.addEventListener('click', dismissToast);
+  setTimeout(dismissToast, isSuccess ? 5000 : 6000);
+}
+
 // --------- Contact form open/close + submit ---------
 (function contact(){
-  const open = document.getElementById('openForm');
-  const close = document.getElementById('closeForm');
-  const wrap = document.getElementById('formWrap');
-  const form = document.getElementById('contactForm');
+  const open    = document.getElementById('openForm');
+  const close   = document.getElementById('closeForm');
+  const wrap    = document.getElementById('formWrap');
+  const form    = document.getElementById('contactForm');
   const sendBtn = document.getElementById('sendBtn');
   if(!open || !wrap) return;
 
@@ -124,21 +207,83 @@ document.querySelectorAll('.svc-card').forEach(card=>{
     wrap.hidden = false;
     setTimeout(()=> wrap.scrollIntoView({behavior:'smooth', block:'center'}), 50);
   });
+
   close.addEventListener('click', ()=>{
     wrap.hidden = true;
-    sendBtn.classList.remove('sent');
-    sendBtn.querySelector('span').textContent = 'Send Message →';
+    resetBtn();
     setTimeout(()=> document.getElementById('contact').scrollIntoView({behavior:'smooth', block:'start'}), 50);
   });
-  form.addEventListener('submit', (e)=>{
+
+  function resetBtn() {
+    sendBtn.disabled = false;
+    sendBtn.classList.remove('sent', 'lc-sending', 'lc-error');
+    sendBtn.querySelector('span').textContent = 'Send Message →';
+  }
+
+  function setBtnState(state) {
+    sendBtn.classList.remove('sent', 'lc-sending', 'lc-error');
+    if (state === 'sending') {
+      sendBtn.disabled = true;
+      sendBtn.classList.add('lc-sending');
+      sendBtn.querySelector('span').innerHTML =
+        '<span class="lc-spinner"></span> Sending…';
+      // Spinner style injection (once)
+      if (!document.getElementById('lc-spinner-style')) {
+        const s = document.createElement('style');
+        s.id = 'lc-spinner-style';
+        s.textContent = `
+          .lc-spinner {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(0,0,0,0.25);
+            border-top-color: rgba(0,0,0,0.75);
+            border-radius: 50%;
+            animation: lc-spin 0.7s linear infinite;
+            vertical-align: middle; margin-right: 6px;
+          }
+          @keyframes lc-spin { to { transform: rotate(360deg); } }
+          #sendBtn.lc-sending { opacity: 0.85; cursor: not-allowed; }
+          #sendBtn.lc-error   { background: linear-gradient(135deg, #7f1d1d, #991b1b) !important; }
+          #sendBtn.sent       { background: linear-gradient(135deg, #14532d, #166534) !important; }
+        `;
+        document.head.appendChild(s);
+      }
+    } else if (state === 'success') {
+      sendBtn.disabled = true;
+      sendBtn.classList.add('sent');
+      sendBtn.querySelector('span').textContent = '✓ Message sent!';
+    } else if (state === 'error') {
+      sendBtn.disabled = false;
+      sendBtn.classList.add('lc-error');
+      sendBtn.querySelector('span').textContent = '✗ Failed — try again';
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    sendBtn.classList.add('sent');
-    sendBtn.querySelector('span').textContent = '✓ Message sent!';
-    form.reset(); // Reset all form fields after submission
-    setTimeout(()=>{
-      sendBtn.classList.remove('sent');
-      sendBtn.querySelector('span').textContent = 'Send Message →';
-    }, 4000);
+
+    setBtnState('sending');
+
+    try {
+      const data = new FormData(form);
+      const res  = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: data
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        setBtnState('success');
+        form.reset();
+        showToast('Message sent! I\'ll get back to you soon 🚀', 'success');
+        setTimeout(resetBtn, 5000);
+      } else {
+        throw new Error(json.message || 'Submission failed');
+      }
+    } catch(err) {
+      setBtnState('error');
+      showToast('Failed to send. Please email me directly at workinglc65@gmail.com', 'error');
+      setTimeout(resetBtn, 5000);
+    }
   });
 })();
 

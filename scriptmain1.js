@@ -51,7 +51,7 @@
 
 // --------- Active nav on scroll ---------
 (function activeNav(){
-  const sections = ["#home","#about","#services","#work","#contact"]
+  const sections = ["#home","#about","#work","#contact"]
     .map(s => ({ id: s, el: document.querySelector(s) }))
     .filter(x => x.el);
   const dlinks = document.querySelectorAll('.nav-link');
@@ -102,14 +102,7 @@
   raf = requestAnimationFrame(tick);
 })();
 
-// --------- Service card cursor spotlight ---------
-document.querySelectorAll('.svc-card').forEach(card=>{
-  card.addEventListener('pointermove', (e)=>{
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', (e.clientX-r.left)+'px');
-    card.style.setProperty('--my', (e.clientY-r.top)+'px');
-  });
-});
+
 
 // --------- Toast helper ---------
 function showToast(message, type = 'success') {

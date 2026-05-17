@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>my daily blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #c5d5e8;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13px;
+    min-height: 100vh;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  .entry-body-text, #entry-title-input, #entry-body-input, #music-in, #pw-input {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+  }
+
+  #blog-wrap { max-width: 800px; margin: 0 auto; padding: 16px 12px; }
+
+  #blog-header {
+    background: #1a3a5c; border: 2px solid #0a1f3a;
+    border-bottom: none; padding: 20px 22px 14px;
+  }
+  #blog-header h1 {
+    font-family: 'Courier Prime', monospace; color: #ffe066;
+    font-size: 24px; letter-spacing: 1px; margin-bottom: 4px;
+  }
+  #blog-header p { color: #8ab4d4; font-size: 11px; font-style: italic; }
+
+  #blog-nav {
+    background: #2a5a8c; border-left: 2px solid #0a1f3a;
+    border-right: 2px solid #0a1f3a; border-bottom: 1px solid #1a3a5c;
+    padding: 6px 16px; display: flex; align-items: center; gap: 10px;
+  }
+  #nav-date { color: #8ab4d4; font-size: 10px; flex: 1; }
+  #nav-sep { color: #5a8ab0; font-size: 11px; display: none; }
+  #nav-write-link {
+    color: #ffdd88; font-size: 11px; font-weight: bold;
+    text-decoration: none; cursor: pointer; display: none;
+  }
+  #nav-write-link:hover { text-decoration: underline; }
+  #login-btn {
+    background: #ffe066; color: #1a3a5c; border: 2px outset #ffd000;
+    padding: 3px 12px; font-size: 11px; font-weight: bold;
+    cursor: pointer; font-family: Verdana, sans-serif;
+  }
+  #login-btn:active { border-style: inset; }
+
+  #main-layout { display: flex; }
+  #main-col {
+    flex: 1; background: #fff; border: 2px solid #0a1f3a;
+    border-top: none; border-right: none; min-width: 0;
+  }
+
+  #sidebar {
+    width: 190px; flex-shrink: 0; background: #eef4fb;
+    border: 2px solid #0a1f3a; border-top: none; border-left: 1px solid #b0c8e0;
+  }
+  .sidebar-box { border-bottom: 1px solid #b0c8e0; padding: 10px 12px; }
+  .sidebar-box h3 {
+    font-family: 'Courier Prime', monospace; color: #1a3a5c; font-size: 11px;
+    font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 7px; border-bottom: 1px dotted #b0c8e0; padding-bottom: 4px;
+  }
+  .sidebar-box p, .sidebar-box li { font-size: 11px; color: #334; line-height: 1.65; }
+  .sidebar-box ul { padding-left: 0; }
+  .sidebar-box li { margin-bottom: 3px; list-style: none; }
+  .sidebar-box li.clickable { cursor: pointer; color: #1a5a8c; }
+  .sidebar-box li.clickable:hover { text-decoration: underline; }
+  .visitor-count {
+    font-family: 'Courier Prime', monospace; font-size: 20px; letter-spacing: 5px;
+    background: #1a1a2e; color: #00ff66; padding: 4px 10px;
+    display: inline-block; margin-top: 5px;
+  }
+
+  #admin-bar {
+    background: #fff8dc; border-bottom: 1px solid #e0c860;
+    padding: 7px 16px; display: none; align-items: center; gap: 8px;
+    font-size: 11px; color: #554400;
+  }
+  #admin-bar input {
+    border: 1px solid #c0a830; padding: 2px 6px; font-size: 11px;
+    width: 130px; background: #fff; color: #222;
+    -webkit-user-select: text; user-select: text;
+  }
+  #admin-bar button {
+    border: 1px solid #c0a830; background: #f5e070;
+    padding: 2px 10px; font-size: 11px; cursor: pointer; color: #333;
+  }
+  #login-msg { color: #c00; font-size: 11px; }
+
+  #write-section {
+    background: #fffff0; border-bottom: 2px solid #b0c8e0;
+    padding: 14px 16px; display: none;
+  }
+  #write-section h2 {
+    font-family: 'Courier Prime', monospace; color: #1a3a5c;
+    font-size: 13px; margin-bottom: 10px;
+  }
+  #entry-title-input {
+    width: 100%; border: 1px solid #7a9abc; padding: 5px 8px;
+    font-family: Verdana, sans-serif; font-size: 12px;
+    margin-bottom: 8px; background: #fff; color: #222; outline: none;
+  }
+  #entry-title-input:focus { border-color: #1a3a5c; }
+  #entry-body-input {
+    width: 100%; height: 100px; border: 1px solid #7a9abc; padding: 6px 8px;
+    font-family: Georgia, serif; font-size: 13px; line-height: 1.55;
+    resize: vertical; background: #fff; color: #222; outline: none;
+  }
+  #entry-body-input:focus { border-color: #1a3a5c; }
+  #mood-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 8px; margin: 8px 0 10px; font-size: 11px; color: #556;
+  }
+  #mood-row label { font-weight: bold; }
+  #mood-row select, #mood-row input {
+    font-size: 11px; border: 1px solid #7a9abc;
+    padding: 2px 5px; background: #fff; color: #222;
+  }
+  #music-in { width: 130px; }
+  #post-btn {
+    background: #1a3a5c; color: #ffe066; border: 2px outset #2a5a8c;
+    padding: 5px 18px; font-size: 12px; font-weight: bold;
+    cursor: pointer; font-family: Verdana, sans-serif;
+  }
+  #post-btn:active { border-style: inset; }
+  #post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #entries-list { padding: 14px 16px; display: flex; flex-direction: column; gap: 14px; }
+  .entry-box { border: 2px solid #7a9abc; background: #f4f8fc; }
+  .entry-datebar {
+    background: #1a3a5c; color: #ffe066; font-family: 'Courier Prime', monospace;
+    font-size: 11px; padding: 5px 10px; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  .entry-datebar .entry-time { color: #8ab4d4; font-size: 10px; }
+  .entry-inner { padding: 10px 12px; }
+  .entry-title-text {
+    font-family: 'Courier Prime', monospace; color: #1a3a5c;
+    font-size: 15px; font-weight: bold; margin-bottom: 5px;
+  }
+  .entry-mood {
+    display: inline-block; font-size: 10px; color: #557;
+    background: #ddeaf6; border: 1px solid #b0c8e0;
+    padding: 1px 7px; margin-bottom: 8px;
+  }
+  .entry-body-text {
+    font-family: Georgia, serif; font-size: 13px;
+    color: #222; line-height: 1.65; white-space: pre-wrap;
+    -webkit-user-select: text; user-select: text;
+  }
+  .entry-actions {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 10px; padding-top: 8px; border-top: 1px solid #c8daea;
+  }
+  .like-btn {
+    background: #fff; border: 1px solid #a0b8d0; padding: 3px 12px;
+    font-size: 11px; cursor: pointer; color: #334; font-family: Verdana, sans-serif;
+  }
+  .like-btn:hover { background: #ffeaea; border-color: #e08080; }
+  .like-btn.liked { background: #ffe8e8; border-color: #e08080; color: #c00; font-weight: bold; }
+  .like-count { font-size: 11px; color: #889; min-width: 16px; }
+  .del-btn {
+    display: none; cursor: pointer; color: #c00; font-size: 11px;
+    margin-left: auto; background: none; border: 1px solid #e08080;
+    padding: 2px 8px; font-family: Verdana, sans-serif;
+  }
+  .del-btn:hover { background: #ffe8e8; }
+  .admin-mode .del-btn { display: inline-block; }
+  .no-entries {
+    padding: 36px 16px; text-align: center;
+    color: #889; font-style: italic; font-size: 12px;
+  }
+  #loading-msg {
+    padding: 36px 16px; text-align: center;
+    color: #1a3a5c; font-style: italic; font-size: 12px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  #firebase-banner {
+    background: #fff3cd; border-bottom: 2px solid #e0c860;
+    padding: 10px 16px; font-size: 11px; color: #554400;
+    display: none; line-height: 1.8;
+  }
+  #firebase-banner code {
+    background: #f5e070; padding: 1px 5px;
+    font-family: 'Courier Prime', monospace; border: 1px solid #c0a830;
+  }
+
+  #status-bar {
+    background: #c0d8f0; border: 2px solid #0a1f3a; border-top: none;
+    padding: 3px 10px; font-size: 10px; color: #334;
+    display: flex; justify-content: space-between;
+  }
+  #ie-note { text-align: center; font-size: 10px; color: #557; font-style: italic; margin-top: 6px; }
+
+  .flash { animation: flashbg 0.5s; }
+  @keyframes flashbg { 0%,100%{background:#fffff0} 50%{background:#ffff99} }
+
+  @media (max-width: 560px) {
+    #main-layout { flex-direction: column; }
+    #sidebar { width: 100%; border-left: 2px solid #0a1f3a; }
+    #main-col { border-right: 2px solid #0a1f3a; }
+  }
+</style>
+</head>
+<body>
+
+<div id="blog-wrap">
+
+  <div id="blog-header">
+    <h1>&#9829; my daily blog &#9829;</h1>
+    <p>:: a place to write stuff :: since 2026 ::</p>
+  </div>
+
+  <div id="blog-nav">
+    <span id="nav-date"></span>
+    <span id="nav-sep">|</span>
+    <a id="nav-write-link" href="#write-section">&#9998; new entry</a>
+    <button id="login-btn" onclick="toggleAdminBar()">&#128274; login</button>
+  </div>
+
+  <div id="main-layout">
+    <div id="main-col">
+
+      <div id="admin-bar">
+        &#128274; password:
+        <input type="password" id="pw-input" placeholder="enter password"
+               onkeydown="if(event.key==='Enter')doLogin()" autocomplete="off" />
+        <button onclick="doLogin()">login</button>
+        <span id="login-msg"></span>
+      </div>
+
+      <!-- shown when Firebase config is still placeholder -->
+      <div id="firebase-banner">
+        &#9888; <strong>Firebase not set up yet</strong> — running in local-only mode.
+        Posts are saved in your browser only. Follow the setup guide in the HTML comments to go online.
+      </div>
+
+      <div id="write-section">
+        <h2>&#9999; write a new entry</h2>
+        <input id="entry-title-input" type="text" placeholder="entry title (e.g. Today was weird...)" maxlength="80" />
+        <textarea id="entry-body-input" placeholder="so today i woke up and..."></textarea>
+        <div id="mood-row">
+          <label>current mood:</label>
+          <span id="mood-icon">&#128522;</span>
+          <select id="mood-sel" onchange="updateMoodIcon()">
+            <option value="happy">happy</option>
+            <option value="okay">okay</option>
+            <option value="tired">tired</option>
+            <option value="sad">sad</option>
+            <option value="excited">excited!!!</option>
+            <option value="bored">bored</option>
+            <option value="anxious">anxious</option>
+            <option value="weird">weird</option>
+            <option value="loved">loved</option>
+            <option value="meh">meh</option>
+          </select>
+          <label>music:</label>
+          <input id="music-in" type="text" placeholder="what are u listening to?" maxlength="50" />
+        </div>
+        <button id="post-btn" onclick="postEntry()">&#10003; post entry &raquo;</button>
+      </div>
+
+      <div id="entries-list">
+        <div id="loading-msg">&#128203; loading entries...</div>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <div id="sidebar">
+      <div class="sidebar-box">
+        <h3>about me</h3>
+        <p>just a person writing stuff on the internet. this is my little corner of the web &#127760;</p>
+      </div>
+      <div class="sidebar-box">
+        <h3>visitors</h3>
+        <p>you are visitor #</p>
+        <div class="visitor-count" id="visitor-count">000001</div>
+      </div>
+      <div class="sidebar-box">
+        <h3>mood history</h3>
+        <ul id="mood-history-list">
+          <li style="color:#889;font-style:italic">no entries yet</li>
+        </ul>
+      </div>
+      <div class="sidebar-box">
+        <h3>recent entries</h3>
+        <ul id="recent-list">
+          <li style="color:#889;font-style:italic">nothing yet!</li>
+        </ul>
+      </div>
+      <div class="sidebar-box" style="text-align:center;font-size:10px;color:#889;font-style:italic;border-bottom:none">
+        best viewed in<br>Internet Explorer 6<br>800&#215;600 resolution
+      </div>
+    </div><!-- /sidebar -->
+
+  </div><!-- /main-layout -->
+
+  <div id="status-bar">
+    <span id="status-msg">&#x1F4BB; ready.</span>
+    <span>&#x1F512; 🫠</span>
+  </div>
+
+  <p id="ie-note">hosted with &#9829; &mdash; &copy; 2026 my daily blog. all rights reserved probably.</p>
+
+</div><!-- /blog-wrap -->
+
+<script type="module">
+// ════════════════════════════════════════════════════════════════════
+//  FIREBASE SETUP GUIDE
+//  Follow these steps once to make posts visible to all visitors.
+// ════════════════════════════════════════════════════════════════════
+//
+//  STEP 1 — Create a free Firebase project
+//    → https://console.firebase.google.com
+//    → "Add project" → any name → disable Analytics → Create
+//
+//  STEP 2 — Create Firestore database
+//    → Sidebar: Build → Firestore Database → Create database
+//    → "Start in production mode" → pick any region → Enable
+//
+//  STEP 3 — Set Firestore security rules
+//    → Firestore → Rules tab → replace everything with this → Publish:
+//
+//    rules_version = '2';
+//    service cloud.firestore {
+//      match /databases/{database}/documents {
+//        match /entries/{id} {
+//          allow read: if true;          // anyone can read posts
+//          allow write: if true;         // protected by your JS password
+//        }
+//      }
+//    }
+//
+//  STEP 4 — Get your config
+//    → Project Settings (gear) → General → Your apps → </> Web
+//    → Register app → copy the firebaseConfig values below
+//
+//  STEP 5 — Add authorised domain (prevents strangers using your DB)
+//    → Firebase console → Authentication → Settings → Authorised domains
+//    → Add:  yourusername.github.io
+//
+//  STEP 6 — Host on GitHub Pages at /blog
+//    → Put this file at:  /blog/index.html  in your repo
+//    → Repo Settings → Pages → Deploy from branch (main / root)
+//    → Your blog URL:  https://yourusername.github.io/blog
+//
+// ════════════════════════════════════════════════════════════════════
+//  PASTE YOUR FIREBASE CONFIG HERE (replace all REPLACE_... values)
+// ════════════════════════════════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyA00q3z7-pvIj4KaAcRBveylBxq5HyBPRo",
+  authDomain:        "blog-cdc5d.firebaseapp.com",
+  projectId:         "blog-cdc5d",
+  storageBucket:     "blog-cdc5d.firebasestorage.app",
+  messagingSenderId: "280830388776",
+  appId:             "1:280830388776:web:6f9b513b773c1c6efe631d"
+};
+// ════════════════════════════════════════════════════════════════════
+
+// ── SECURITY PROTECTIONS ─────────────────────────────────────────
+
+// Right-click disabled
+document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+
+// Text selection disabled outside inputs
+document.addEventListener('selectstart', e => {
+  const t = e.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA') return;
+  e.preventDefault(); return false;
+});
+
+// Drag disabled
+document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
+
+// Mobile long-press disabled
+let _lpt;
+document.addEventListener('touchstart', e => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+document.addEventListener('touchstart', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  _lpt = setTimeout(() => e.preventDefault(), 400);
+}, { passive: true });
+document.addEventListener('touchend',  () => clearTimeout(_lpt));
+document.addEventListener('touchmove', () => clearTimeout(_lpt));
+
+// Keyboard shortcuts blocked (capture phase = before browser acts)
+document.addEventListener('keydown', e => {
+  const k = e.key.toUpperCase();
+  const c = e.ctrlKey || e.metaKey;
+  if (e.key === 'F12')                                   { e.preventDefault(); return false; }
+  if (c && e.shiftKey && ['I','J','C','K'].includes(k))  { e.preventDefault(); return false; }
+  if (c && ['U','S','P','F'].includes(k))                { e.preventDefault(); return false; }
+  const tag = document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (c && k === 'A') { e.preventDefault(); return false; }
+}, true);
+
+// Print blocked
+window.addEventListener('beforeprint', e => { e.preventDefault(); window.stop(); });
+(()=>{ const s=document.createElement('style'); s.textContent='@media print{body{display:none!important}}'; document.head.appendChild(s); })();
+
+// DevTools detection — blur overlay
+(function() {
+  let open = false;
+  function lock() {
+    if (open) return; open = true;
+    const o = document.createElement('div');
+    o.id = 'dt-overlay';
+    o.style.cssText = 'position:fixed;inset:0;background:#1a3a5c;color:#ffe066;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:monospace;text-align:center';
+    o.innerHTML = '<div style="font-size:48px">🔒</div><h2 style="margin:12px 0 8px">access denied</h2><p style="color:#8ab4d4;font-size:13px">close developer tools to continue</p>';
+    document.body.appendChild(o);
+    const w = document.getElementById('blog-wrap');
+    if (w) w.style.filter = 'blur(8px)';
+  }
+  function unlock() {
+    if (!open) return; open = false;
+    document.getElementById('dt-overlay')?.remove();
+    const w = document.getElementById('blog-wrap');
+    if (w) w.style.filter = '';
+  }
+  setInterval(() => {
+    (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160)
+      ? lock() : unlock();
+  }, 800);
+  setInterval(() => {
+    const t = performance.now();
+    (function(){})['constructor']('debugger')();
+    performance.now() - t > 100 ? lock() : unlock();
+  }, 3000);
+})();
+
+//
+const _a = 'dedccb9932559e87553a141ce642a241';
+const _b = 'efd2b80dfeadffadca8225cca1f24ffb';
+// ─────────────────────────────────────────────────────────────────
+
+// ── APP ───────────────────────────────────────────────────────────
+const MOOD_ICONS = {
+  happy:'😊', okay:'🙂', tired:'😴', sad:'😔', excited:'😄',
+  bored:'😑', anxious:'😟', weird:'😵', loved:'🥰', meh:'😶'
+};
+
+const FB_READY = FIREBASE_CONFIG.apiKey !== 'REPLACE_WITH_YOUR_API_KEY';
+
+let entries   = [];
+let likedByMe = {};
+let isAdmin   = false;
+let adminBarOpen = false;
+let db = null;
+let _fb = {};
+
+// Hash password
+async function hashPassword(pw) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────
+async function boot() {
+  document.getElementById('nav-date').textContent = new Date().toDateString().toLowerCase();
+
+  if (!FB_READY) {
+    document.getElementById('firebase-banner').style.display = 'block';
+    fallback(); return;
+  }
+
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const fb = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    _fb = fb;
+    db = fb.getFirestore(initializeApp(FIREBASE_CONFIG));
+    await loadCloud();
+  } catch(err) {
+    console.error('Firebase error:', err);
+    setStatus('⚠️ cloud unavailable — local mode');
+    fallback();
+  }
+}
+
+async function loadCloud() {
+  try {
+    const q = _fb.query(_fb.collection(db,'entries'), _fb.orderBy('createdAt','desc'));
+    const snap = await _fb.getDocs(q);
+    entries = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
+    try { likedByMe = JSON.parse(sessionStorage.getItem('likedByMe')||'{}'); } catch(e){ likedByMe={}; }
+    render(); visitor();
+  } catch(err) {
+    console.error('Load error:', err);
+    fallback();
+  }
+}
+
+function fallback() {
+  try { entries = JSON.parse(localStorage.getItem('myblog_entries_v2')||'[]'); } catch(e){ entries=[]; }
+  try { likedByMe = JSON.parse(sessionStorage.getItem('likedByMe')||'{}'); } catch(e){ likedByMe={}; }
+  render(); visitor();
+}
+
+function visitor() {
+  let v = parseInt(localStorage.getItem('myblog_visitors_v1')||'0',10);
+  if (!sessionStorage.getItem('visited')) {
+    v++; localStorage.setItem('myblog_visitors_v1',v); sessionStorage.setItem('visited','1');
+  }
+  document.getElementById('visitor-count').textContent = String(v).padStart(6,'0');
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────────
+function toggleAdminBar() {
+  if (isAdmin) { logout(); return; }
+  adminBarOpen = !adminBarOpen;
+  document.getElementById('admin-bar').style.display = adminBarOpen ? 'flex' : 'none';
+  if (adminBarOpen) setTimeout(()=>document.getElementById('pw-input').focus(), 50);
+}
+
+async function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (await hashPassword(pw) === _a+_b) {
+    isAdmin = true; adminBarOpen = false;
+    document.getElementById('admin-bar').style.display   = 'none';
+    document.getElementById('login-btn').textContent     = '🔓 logout';
+    document.getElementById('write-section').style.display = 'block';
+    document.getElementById('nav-write-link').style.display = 'inline';
+    document.getElementById('nav-sep').style.display     = 'inline';
+    document.getElementById('entries-list').classList.add('admin-mode');
+    setStatus('✓ welcome back! you can now write entries.');
+    render();
+  } else {
+    document.getElementById('login-msg').textContent = '✗ wrong password';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function logout() {
+  isAdmin = false; adminBarOpen = false;
+  ['admin-bar','write-section'].forEach(id => document.getElementById(id).style.display='none');
+  document.getElementById('nav-write-link').style.display = 'none';
+  document.getElementById('nav-sep').style.display        = 'none';
+  document.getElementById('login-btn').textContent        = '🔒 login';
+  document.getElementById('entries-list').classList.remove('admin-mode');
+  document.getElementById('login-msg').textContent = '';
+  document.getElementById('pw-input').value = '';
+  setStatus('logged out.'); render();
+}
+
+// ── POST ──────────────────────────────────────────────────────────
+function ts() {
+  const d = new Date();
+  const D=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const h=d.getHours(), m=String(d.getMinutes()).padStart(2,'0');
+  return { date:`${D[d.getDay()]}, ${M[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`, time:`${h%12||12}:${m}${h>=12?'pm':'am'}` };
+}
+
+async function postEntry() {
+  if (!isAdmin) return;
+  const body = document.getElementById('entry-body-input').value.trim();
+  if (!body) { setStatus('⚠️ write something first!'); return; }
+  const btn = document.getElementById('post-btn');
+  btn.disabled = true; btn.textContent = '⏳ posting...';
+
+  const t = ts();
+  const entry = {
+    id: Date.now(), createdAt: Date.now(),
+    title: document.getElementById('entry-title-input').value.trim() || 'untitled entry',
+    body, mood: document.getElementById('mood-sel').value,
+    music: document.getElementById('music-in').value.trim(),
+    date: t.date, time: t.time, likes: 0
+  };
+
+  if (FB_READY && db) {
+    try {
+      const ref = await _fb.addDoc(_fb.collection(db,'entries'), entry);
+      entry._docId = ref.id;
+    } catch(err) {
+      console.error('Save error:', err);
+      setStatus('⚠️ cloud save failed — saved locally');
+      try { localStorage.setItem('myblog_entries_v2', JSON.stringify([entry,...entries])); } catch(e){}
+    }
+  } else {
+    try { localStorage.setItem('myblog_entries_v2', JSON.stringify([entry,...entries])); } catch(e){}
+  }
+
+  entries.unshift(entry);
+  ['entry-title-input','entry-body-input','music-in'].forEach(id => document.getElementById(id).value='');
+  btn.disabled = false; btn.textContent = '✓ post entry »';
+  const ws = document.getElementById('write-section');
+  ws.classList.add('flash'); setTimeout(()=>ws.classList.remove('flash'),500);
+  setStatus('✓ entry posted! the internet has been updated.');
+  render();
+}
+
+// ── LIKE ──────────────────────────────────────────────────────────
+async function toggleLike(id, docId) {
+  const entry = entries.find(e=>e.id===id);
+  if (!entry) return;
+  const already = !!likedByMe[id];
+  const delta = already ? -1 : 1;
+  entry.likes = Math.max(0,(entry.likes||0)+delta);
+  if (already) delete likedByMe[id]; else likedByMe[id]=true;
+  sessionStorage.setItem('likedByMe', JSON.stringify(likedByMe));
+  document.querySelector(`.like-btn[data-id="${id}"]`)?.classList.toggle('liked',!!likedByMe[id]);
+  document.querySelector(`.like-count[data-id="${id}"]`).textContent = entry.likes;
+  if (FB_READY && db && docId) {
+    try { await _fb.updateDoc(_fb.doc(db,'entries',docId), {likes:_fb.increment(delta)}); }
+    catch(e){ console.error('Like sync error:',e); }
+  }
+}
+
+// ── DELETE ────────────────────────────────────────────────────────
+async function deleteEntry(id, docId) {
+  if (!isAdmin || !confirm('delete this entry?')) return;
+  if (FB_READY && db && docId) {
+    try { await _fb.deleteDoc(_fb.doc(db,'entries',docId)); }
+    catch(err){ console.error('Delete error:',err); setStatus('⚠️ delete failed'); return; }
+  }
+  entries = entries.filter(e=>e.id!==id);
+  if (!FB_READY) try { localStorage.setItem('myblog_entries_v2',JSON.stringify(entries)); }catch(e){}
+  render(); setStatus('entry deleted.');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function updateMoodIcon(){ document.getElementById('mood-icon').textContent=MOOD_ICONS[document.getElementById('mood-sel').value]||'🙂'; }
+
+function render() {
+  const list  = document.getElementById('entries-list');
+  const recnt = document.getElementById('recent-list');
+  const moodH = document.getElementById('mood-history-list');
+  if (!entries.length) {
+    list.innerHTML = '<div class="no-entries">no entries yet. check back soon! &#9829;</div>';
+    recnt.innerHTML = '<li style="color:#889;font-style:italic">nothing yet!</li>';
+    moodH.innerHTML = '<li style="color:#889;font-style:italic">no entries yet</li>';
+    return;
+  }
+  list.innerHTML = entries.map(e => {
+    const docId = e._docId||'';
+    return `<div class="entry-box" id="e${e.id}">
+      <div class="entry-datebar">
+        <span>&#128197; ${esc(e.date)}</span>
+        <span class="entry-time">&#128336; ${esc(e.time)}</span>
+      </div>
+      <div class="entry-inner">
+        <div class="entry-title-text">&#9679; ${esc(e.title)}</div>
+        <div class="entry-mood">${MOOD_ICONS[e.mood]||'🙂'} feeling: ${esc(e.mood)}${e.music?' &nbsp;|&nbsp; 🎵 '+esc(e.music):''}</div>
+        <div class="entry-body-text">${esc(e.body)}</div>
+        <div class="entry-actions">
+          <button class="like-btn ${likedByMe[e.id]?'liked':''}" data-id="${e.id}" onclick="window._blog.like(${e.id},'${docId}')">&#9829; like</button>
+          <span class="like-count" data-id="${e.id}">${e.likes||0}</span>
+          <button class="del-btn" onclick="window._blog.del(${e.id},'${docId}')">&#128465; delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  recnt.innerHTML = entries.slice(0,5).map(e=>{
+    const t=e.title.length>22?e.title.slice(0,22)+'...':e.title;
+    return `<li class="clickable" onclick="document.getElementById('e${e.id}').scrollIntoView({behavior:'smooth'})">${esc(t)}</li>`;
+  }).join('');
+  moodH.innerHTML = entries.slice(0,6).map(e=>`<li>${MOOD_ICONS[e.mood]||'🙂'} ${esc(e.mood)}</li>`).join('');
+}
+
+function setStatus(msg) {
+  document.getElementById('status-msg').textContent = msg;
+  setTimeout(()=>document.getElementById('status-msg').textContent='💻 ready.', 3000);
+}
+
+// Expose to onclick handlers (type=module scope is isolated)
+window._blog   = { like: toggleLike, del: deleteEntry };
+window.toggleAdminBar = toggleAdminBar;
+window.doLogin        = doLogin;
+window.postEntry      = postEntry;
+window.updateMoodIcon = updateMoodIcon;
+
+boot();
+</script>
+
+</body>
+</html>
